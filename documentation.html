@@ -1,0 +1,1621 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Documentation · geocrowd</title>
+  <meta name="description" content="Documentation de geocrowd, logiciel de collecte et de publication d'informations géolocalisées : installation, configuration, collections et éditeur de schéma, API publique GeoJSON, site public, back-office, double authentification, import OpenStreetMap.">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:site_name" content="geocrowd">
+  <meta property="og:title" content="Documentation · geocrowd">
+  <meta property="og:description" content="Installation, collections, API publique GeoJSON, site public, back-office et administration de geocrowd.">
+  <meta property="og:url" content="https://geocrowd-api.org/documentation.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-white text-zinc-700 antialiased dark:bg-zinc-950 dark:text-zinc-300">
+  <a class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:bg-zinc-900 focus:px-3 focus:py-2 focus:text-white" href="#contenu">Aller au contenu</a>
+
+  <header class="border-b border-zinc-200 dark:border-zinc-800">
+    <div class="mx-auto flex max-w-6xl flex-wrap items-center gap-x-8 gap-y-2 px-4 py-3.5 sm:px-6">
+      <a class="font-semibold text-zinc-900 dark:text-white" href="./">geocrowd</a>
+      <nav class="flex flex-wrap gap-x-6 gap-y-1 text-sm" aria-label="Navigation principale">
+        <a class="font-semibold text-zinc-900 dark:text-white" href="documentation.html" aria-current="page">Documentation</a>
+        <a class="hover:text-zinc-900 dark:hover:text-white" href="#api">API</a>
+        <a class="hover:text-zinc-900 dark:hover:text-white" href="#installation">Installation</a>
+      </nav>
+      <a class="ml-auto text-sm hover:text-zinc-900 dark:hover:text-white" href="https://github.com/geocrowd/geocrowd">GitHub</a>
+    </div>
+  </header>
+
+  <div class="mx-auto grid max-w-6xl grid-cols-1 px-4 sm:px-6 lg:grid-cols-[14rem_minmax(0,1fr)] lg:gap-x-12">
+    <nav class="toc sticky top-0 z-10 -mx-4 border-b border-zinc-200 bg-white px-4 text-sm sm:-mx-6 sm:px-6 lg:mx-0 lg:max-h-screen lg:self-start lg:overflow-y-auto lg:border-0 lg:bg-transparent lg:px-0 lg:py-10 dark:border-zinc-800 dark:bg-zinc-950 lg:dark:bg-transparent" aria-label="Sommaire">
+      <details open>
+        <summary>Sommaire</summary>
+        <ol>
+          <li><a href="#installation">Installation</a>
+            <ol>
+              <li><a href="#prerequis">Prérequis</a></li>
+              <li><a href="#installation-ftp">Copie des fichiers</a></li>
+              <li><a href="#apache">Apache et .htaccess</a></li>
+              <li><a href="#nginx">Nginx</a></li>
+              <li><a href="#local">En local</a></li>
+              <li><a href="#mise-a-jour">Mise à jour et sauvegarde</a></li>
+            </ol>
+          </li>
+          <li><a href="#configuration">Configuration</a>
+            <ol>
+              <li><a href="#envoi-emails">Envoi d'e-mails</a></li>
+            </ol>
+          </li>
+          <li><a href="#collections">Collections</a>
+            <ol>
+              <li><a href="#collections-format">Définition JSON</a></li>
+              <li><a href="#collections-options">Options</a></li>
+              <li><a href="#types-de-champs">Types de champs</a></li>
+              <li><a href="#champs-ref">Liens entre points</a></li>
+              <li><a href="#images">Images</a></li>
+            </ol>
+          </li>
+          <li><a href="#api">API publique</a>
+            <ol>
+              <li><a href="#api-base">URL de base</a></li>
+              <li><a href="#api-auth">Clés d'API</a></li>
+              <li><a href="#api-cors">CORS</a></li>
+              <li><a href="#api-format">Format des réponses</a></li>
+              <li><a href="#api-erreurs">Erreurs</a></li>
+              <li><a href="#api-limites">Limites de débit</a></li>
+              <li><a href="#ep-collections">Lister les collections</a></li>
+              <li><a href="#ep-collection">Lire une collection</a></li>
+              <li><a href="#ep-points">Lire les points</a></li>
+              <li><a href="#ep-point">Lire un point</a></li>
+              <li><a href="#ep-soumettre">Soumettre un point</a></li>
+              <li><a href="#ep-modifier">Proposer une modification</a></li>
+              <li><a href="#ep-fichiers">Lire une image</a></li>
+              <li><a href="#ep-front">Configuration du site public</a></li>
+            </ol>
+          </li>
+          <li><a href="#leaflet">Exemple : carte Leaflet</a></li>
+          <li><a href="#site-public">Site public</a>
+            <ol>
+              <li><a href="#site-public-reglages">Réglages</a></li>
+              <li><a href="#site-public-contenu">Pages et formulaires</a></li>
+              <li><a href="#site-public-envois">Ajouts et propositions</a></li>
+              <li><a href="#site-public-cles">Clés d'API</a></li>
+            </ol>
+          </li>
+          <li><a href="#back-office">Back-office</a>
+            <ol>
+              <li><a href="#roles">Rôles</a></li>
+              <li><a href="#invitations">Invitations</a></li>
+              <li><a href="#membres">Membres</a></li>
+              <li><a href="#mon-compte">Mon compte</a></li>
+              <li><a href="#moderation">Modération</a></li>
+              <li><a href="#modifications">Modifications</a></li>
+              <li><a href="#editeur-schema">Éditeur de schéma</a></li>
+              <li><a href="#cles-api">Clés d'API</a></li>
+              <li><a href="#journal">Journal</a></li>
+            </ol>
+          </li>
+          <li><a href="#double-authentification">Double authentification</a>
+            <ol>
+              <li><a href="#regle-2fa">Règle de l'instance</a></li>
+              <li><a href="#methodes-2fa">Méthodes</a></li>
+              <li><a href="#totp-activation">Activation</a></li>
+              <li><a href="#connexion-2fa">Connexion</a></li>
+              <li><a href="#desactivation-2fa">Désactivation</a></li>
+              <li><a href="#codes-de-secours">Codes de secours</a></li>
+              <li><a href="#recuperation">Second facteur perdu</a></li>
+              <li><a href="#tentatives">Tentatives limitées</a></li>
+              <li><a href="#chiffrement-secrets">Chiffrement des secrets</a></li>
+            </ol>
+          </li>
+          <li><a href="#osm">Import OpenStreetMap</a></li>
+          <li><a href="#securite">Sécurité et vie privée</a></li>
+          <li><a href="#licence">Licence</a></li>
+        </ol>
+      </details>
+    </nav>
+
+    <main class="doc prose prose-zinc min-w-0 max-w-3xl py-10 lg:py-12 dark:prose-invert prose-a:text-accent prose-a:underline-offset-2 dark:prose-a:text-accent-dark prose-code:font-normal prose-code:before:content-none prose-code:after:content-none prose-h2:text-2xl" id="contenu">
+      <h1>Documentation</h1>
+      <p class="lead">geocrowd collecte des points géolocalisés et les publie. Une API publique permet de les lire et d'en proposer, un back-office permet de les modérer, et un site public facultatif les affiche sur une carte. Cette page décrit l'installation, les collections, l'API, le site public et l'administration.</p>
+
+      <!-- ============================================================ -->
+      <section>
+        <h2 id="installation">Installation</h2>
+
+        <h3 id="prerequis">Prérequis</h3>
+        <ul>
+          <li><strong>PHP 8.1 ou supérieur</strong>, avec les extensions <code>pdo_sqlite</code> (base de données), <code>gd</code> (traitement des images) et <code>openssl</code> (chiffrement des secrets de <a href="#chiffrement-secrets">double authentification</a>, connexion chiffrée à un serveur SMTP). Ces extensions sont disponibles sur la plupart des hébergements mutualisés.</li>
+          <li>L'extension <code>exif</code>, facultative, sert à corriger l'orientation des photos prises avec un téléphone.</li>
+          <li>Un dossier <code>data/</code> accessible en écriture par PHP. La base SQLite, les images et la clé de chiffrement y sont créées. Ces emplacements se changent dans <a href="#configuration"><code>config.php</code></a>.</li>
+          <li>Un serveur à l'heure : la <a href="#methodes-2fa">double authentification par application</a> utilise l'horloge, avec une tolérance de 30 secondes.</li>
+          <li><strong>HTTPS</strong>, recommandé : sans HTTPS, le cookie de session du back-office n'est pas marqué <code>Secure</code> et les mots de passe circulent en clair.</li>
+        </ul>
+        <p>Ni Composer, ni Node, ni tâche planifiée. L'envoi d'e-mails, facultatif, ne sert qu'à la double authentification par e-mail (voir <a href="#envoi-emails">Envoi d'e-mails</a>).</p>
+
+        <h3 id="installation-ftp">Copie des fichiers</h3>
+        <ol>
+          <li>Télécharger <a href="https://github.com/geocrowd/geocrowd/archive/refs/heads/main.zip">l'archive du dépôt</a> et la décompresser.</li>
+          <li>Relire <code>config.php</code> (voir <a href="#configuration">Configuration</a>).</li>
+          <li>Copier l'ensemble sur l'hébergement, par FTP ou autrement, à la racine du site ou dans un sous-dossier.</li>
+          <li>Rendre <code>data/</code> accessible en écriture par PHP (droits <code>755</code> ou <code>775</code> selon l'hébergeur).</li>
+          <li>Ouvrir <code>https://votre-instance.org/admin/</code>. Le premier écran crée le premier compte admin : nom, adresse et mot de passe de 10 caractères au moins. Avec la règle par défaut (double authentification facultative), la connexion est immédiate.</li>
+          <li>Recommandé : activer la <a href="#double-authentification">double authentification</a> de ce compte dans la page <strong>Mon compte</strong>, ou choisir la règle « Obligatoire pour les comptes admin » dans la page <strong>Membres</strong> (voir <a href="#regle-2fa">Règle de l'instance</a>).</li>
+          <li>Créer une collection dans la page <strong>Collections</strong> du back-office (voir <a href="#editeur-schema">Éditeur de schéma</a>). L'API l'accepte dès son enregistrement.</li>
+          <li>Facultatif : activer le <a href="#site-public">site public</a> dans la page <strong>Site public</strong>. Tant qu'il est désactivé, la racine de l'instance renvoie vers le back-office.</li>
+        </ol>
+        <p>Une installation dans un sous-dossier fonctionne sans réglage : l'API répond alors sous <code>https://votre-instance.org/sous-dossier/api/…</code>.</p>
+
+        <h3 id="apache">Apache et .htaccess</h3>
+        <p>Le fichier <code>.htaccess</code> fourni est prévu pour Apache avec <code>mod_rewrite</code>. Il :</p>
+        <ul>
+          <li>interdit l'accès direct aux dossiers internes <code>src/</code>, <code>data/</code>, <code>bin/</code> (ainsi que <code>collections/</code> et <code>imports/</code>, s'ils existent) et au fichier <code>config.php</code> ;</li>
+          <li>interdit l'accès aux fichiers et dossiers cachés, dont le nom commence par un point (<code>.git</code>, <code>.env</code>…), sauf <code>.well-known/</code> ;</li>
+          <li>désactive le listage des dossiers ;</li>
+          <li>sert tels quels les fichiers statiques (<code>admin/</code>, <code>front/</code>, <code>vendor/</code>) et envoie toutes les autres requêtes à <code>index.php</code> ;</li>
+          <li>ajoute aux fichiers statiques les <a href="#securite-en-tetes">en-têtes de sécurité</a> si <code>mod_headers</code> est disponible ; les réponses de <code>index.php</code> les envoient elles-mêmes ;</li>
+          <li>compresse les réponses JSON si <code>mod_deflate</code> est disponible.</li>
+        </ul>
+        <div class="warn">
+          <strong>Vérification après l'installation</strong>
+          <p>L'adresse <code>https://votre-instance.org/data/geocrowd.sqlite</code> doit renvoyer une erreur 403. Si le fichier se télécharge, le <code>.htaccess</code> n'est pas appliqué (fichier absent de la copie, ou <code>AllowOverride</code> désactivé) et la base est exposée.</p>
+          <p>Le back-office fait cette vérification à chaque ouverture par un compte admin : si la base se télécharge, une alerte s'affiche en haut de page et invite à refuser l'accès au dossier <code>data/</code> dans la configuration du serveur, ou à placer la base et le dossier de données hors de la racine web (voir <a href="#configuration">Configuration</a>). La vérification porte sur l'emplacement par défaut, <code>data/geocrowd.sqlite</code>.</p>
+        </div>
+
+        <h3 id="nginx">Nginx</h3>
+        <p>Nginx ne lit pas les fichiers <code>.htaccess</code>. La configuration doit reproduire ses règles : refuser l'accès aux dossiers internes, à <code>config.php</code> et aux fichiers cachés, servir tels quels les fichiers statiques de <code>admin/</code>, <code>front/</code> et <code>vendor/</code> avec les en-têtes de sécurité, et envoyer les autres requêtes à <code>index.php</code>, racine comprise : c'est <code>index.php</code> qui sert le site public ou renvoie vers le back-office. Exemple pour une installation à la racine, à adapter (chemin, version de PHP-FPM) :</p>
+        <div class="code">
+          <div class="code-title">/etc/nginx/sites-available/geocrowd</div>
+<pre><code>server {
+    server_name votre-instance.org;
+    root /var/www/geocrowd;
+
+    <span class="c"># Dossiers et fichiers internes : jamais servis.</span>
+    location ~ ^/(src|data|collections|bin|imports)(/|$) { return 403; }
+    location = /config.php { return 403; }
+
+    <span class="c"># Fichiers et dossiers cachés (.git, .env…) : jamais servis, sauf .well-known.</span>
+    location ~ /\.(?!well-known) { return 403; }
+
+    <span class="c"># Fichiers statiques (admin/, front/, vendor/) tels quels, avec les en-têtes</span>
+    <span class="c"># de sécurité ; tout le reste vers index.php, qui envoie ses propres en-têtes.</span>
+    location / {
+        index index.html;
+        try_files $uri $uri/ /index.php$is_args$args;
+
+        add_header Content-Security-Policy <span class="s">"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob: https://tile.openstreetmap.org; font-src 'self'; connect-src 'self' https://nominatim.openstreetmap.org; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"</span> always;
+        add_header X-Content-Type-Options <span class="s">"nosniff"</span> always;
+        add_header X-Frame-Options <span class="s">"DENY"</span> always;
+        add_header Referrer-Policy <span class="s">"strict-origin-when-cross-origin"</span> always;
+        add_header Permissions-Policy <span class="s">"camera=(), microphone=(), geolocation=(), payment=()"</span> always;
+        add_header Cross-Origin-Opener-Policy <span class="s">"same-origin"</span> always;
+        <span class="c"># En HTTPS seulement.</span>
+        add_header Strict-Transport-Security <span class="s">"max-age=31536000"</span> always;
+    }
+
+    location = /index.php {
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root/index.php;
+        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+    }
+    location ~ \.php$ { return 404; }
+
+    <span class="c"># Réponses JSON compressées.</span>
+    gzip on;
+    gzip_types application/json;
+
+    <span class="c"># Taille maximale d'une soumission avec images.</span>
+    client_max_body_size 20m;
+}</code></pre>
+        </div>
+        <p>Les directives <code>add_header</code> sont placées dans le bloc <code>location /</code> : elles s'appliquent aux fichiers statiques, mais pas aux réponses de <code>index.php</code>, qui portent déjà ces en-têtes. La valeur de <code>Content-Security-Policy</code> doit rester identique à celle de geocrowd (constante <code>Http::CSP</code> de <code>src/Http.php</code>). La vérification de l'adresse <code>/data/geocrowd.sqlite</code> décrite pour <a href="#apache">Apache</a> vaut aussi pour Nginx.</p>
+
+        <h3 id="local">En local</h3>
+        <p>Le serveur intégré de PHP permet d'essayer geocrowd ou de le développer :</p>
+<pre><code>php -S localhost:8000 index.php</code></pre>
+        <p>Le back-office est alors à <a href="http://localhost:8000/admin/">http://localhost:8000/admin/</a> et l'API sous <code>http://localhost:8000/api/</code>. Ce serveur ne lit pas le <code>.htaccess</code> (les fichiers statiques n'y reçoivent donc pas les en-têtes de sécurité) et ne compresse pas les réponses : il n'est pas prévu pour la production.</p>
+
+        <h3 id="mise-a-jour">Mise à jour et sauvegarde</h3>
+        <p>Par défaut, toutes les données sont dans <code>data/</code> (emplacements réglables par <code>database</code> et <code>data_dir</code>, voir <a href="#configuration">Configuration</a>) :</p>
+        <dl class="params">
+          <dt>geocrowd.sqlite</dt>
+          <dd>La base : points, collections, membres, réglages du site public et journal. Pendant le fonctionnement, elle est accompagnée des fichiers <code>geocrowd.sqlite-wal</code> et <code>geocrowd.sqlite-shm</code>.</dd>
+          <dt>secret.php</dt>
+          <dd>La clé de chiffrement des secrets de double authentification par application (voir <a href="#chiffrement-secrets">Chiffrement des secrets</a>).</dd>
+          <dt>uploads/</dt>
+          <dd>Les images des points.</dd>
+        </dl>
+        <p>Ces éléments se sauvegardent ensemble : <code>geocrowd.sqlite</code> avec ses fichiers <code>-wal</code> et <code>-shm</code>, <code>secret.php</code> et <code>uploads/</code>. Une base restaurée sans le fichier <code>secret.php</code> qui l'accompagnait oblige chaque membre qui utilise une application d'authentification à reconfigurer sa double authentification.</p>
+        <p>La mise à jour consiste à remplacer les fichiers du programme (<code>index.php</code>, <code>src/</code>, <code>admin/</code>, <code>front/</code>, <code>vendor/</code>, <code>bin/</code>, <code>.htaccess</code>) sans toucher à <code>data/</code>, puis à comparer <code>config.php</code> avec la nouvelle version pour y reporter les nouvelles clés. Une clé absente d'un <code>config.php</code> antérieur prend sa valeur par défaut. Le schéma de la base est mis à jour à la requête suivante.</p>
+        <div class="note">
+          <strong>Depuis une version sans chiffrement des secrets</strong>
+          <p>Les secrets de double authentification enregistrés en clair par une version antérieure sont chiffrés automatiquement à la première requête web qui suit la mise à jour ; le fichier <code>secret.php</code> est créé à ce moment, et s'ajoute aux sauvegardes. Les scripts de <code>bin/</code> ne font pas ce chiffrement : lancés sur une copie locale de la base, ils n'ont pas la clé du serveur.</p>
+        </div>
+        <div class="note">
+          <strong>Depuis une version à double authentification obligatoire</strong>
+          <p>Les membres gardent leur application d'authentification. La règle de l'instance est « Facultative » par défaut : chaque membre peut alors désactiver sa double authentification depuis <strong>Mon compte</strong>. Pour la maintenir obligatoire, un compte admin choisit une autre règle dans la page <strong>Membres</strong> (voir <a href="#regle-2fa">Règle de l'instance</a>).</p>
+        </div>
+        <div class="note">
+          <strong>Depuis une version à fichiers de collections</strong>
+          <p>Les premières versions décrivaient chaque collection dans un fichier <code>collections/*.json</code>. Au premier lancement d'une version récente, ces fichiers sont importés dans la base, une seule fois, avec leurs points. Les collections se modifient ensuite dans le back-office ; le dossier <code>collections</code> n'est plus lu et peut être supprimé. Un fichier invalide bloque ce premier lancement, avec une erreur dans le journal PHP.</p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <section>
+        <h2 id="configuration">Configuration</h2>
+        <p>Les réglages de l'instance sont dans <code>config.php</code>, à la racine. Les valeurs par défaut conviennent à la plupart des hébergements. Les limites de débit sont décrites dans <a href="#api-limites">Limites de débit</a>. Les réglages du site public se font dans le back-office (voir <a href="#site-public-reglages">Site public</a>).</p>
+        <div class="code">
+          <div class="code-title">config.php</div>
+<pre><code>&lt;?php
+
+return [
+    <span class="c">// Fichier SQLite (créé automatiquement) et dossier des images et de la clé de chiffrement</span>
+    <span class="c">// (secret.php, à sauvegarder avec la base). Le .htaccess les protège ; sur un hébergement</span>
+    <span class="c">// qui le permet, mieux vaut les placer hors de la racine web, par exemple :</span>
+    <span class="c">// 'database' =&gt; dirname(__DIR__) . '/geocrowd-data/geocrowd.sqlite',</span>
+    <span class="c">// 'data_dir' =&gt; dirname(__DIR__) . '/geocrowd-data',</span>
+    <span class="s">'database'</span> =&gt; __DIR__ . <span class="s">'/data/geocrowd.sqlite'</span>,
+    <span class="s">'data_dir'</span> =&gt; __DIR__ . <span class="s">'/data'</span>,
+
+    <span class="c">// Origines autorisées à appeler l'API publique ('*' = toutes).</span>
+    <span class="s">'cors_origin'</span> =&gt; <span class="s">'*'</span>,
+
+    <span class="c">// Exiger une clé d'API pour l'API publique.</span>
+    <span class="s">'api_key'</span> =&gt; false,
+
+    <span class="c">// Envois publics (soumissions et propositions de modification) : maximum par adresse IP</span>
+    <span class="c">// (par bloc /64 en IPv6) et par heure, puis pour l'ensemble des visiteurs et par heure.</span>
+    <span class="s">'submissions_per_hour'</span> =&gt; 20,
+    <span class="s">'submissions_total_per_hour'</span> =&gt; 500,
+
+    <span class="c">// Au-delà de ce nombre de points et de propositions en attente, les envois publics sont refusés.</span>
+    <span class="s">'max_pending'</span> =&gt; 2000,
+
+    <span class="c">// Place maximale des images, en Mo : au-delà, les envois publics avec images sont refusés.</span>
+    <span class="s">'uploads_max_mb'</span> =&gt; 2000,
+
+    <span class="c">// Lectures de listes de points par adresse IP et par minute.</span>
+    <span class="s">'reads_per_minute'</span> =&gt; 120,
+
+    <span class="c">// Envoi d'e-mails (double authentification par e-mail). null : désactivé.</span>
+    <span class="c">// Avec seulement 'from', la fonction mail() de PHP est utilisée ; avec 'smtp', un serveur SMTP.</span>
+    <span class="c">// 'mail' =&gt; [</span>
+    <span class="c">//     'from' =&gt; 'geocrowd@exemple.org',</span>
+    <span class="c">//     'from_name' =&gt; 'geocrowd',</span>
+    <span class="c">//     'smtp' =&gt; ['host' =&gt; 'mail.infomaniak.com', 'port' =&gt; 587, 'secure' =&gt; 'tls',</span>
+    <span class="c">//                'user' =&gt; 'geocrowd@exemple.org', 'password' =&gt; '…'],</span>
+    <span class="c">// ],</span>
+    <span class="s">'mail'</span> =&gt; null,
+
+    <span class="c">// Durée de validité d'un lien d'invitation, en jours.</span>
+    <span class="s">'invitation_days'</span> =&gt; 7,
+
+    <span class="c">// Nombre maximum de points renvoyés par une requête de lecture.</span>
+    <span class="s">'max_points'</span> =&gt; 100000,
+];</code></pre>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Clé</th><th>Défaut</th><th>Rôle</th></tr></thead>
+            <tbody>
+              <tr><td><code>database</code></td><td><code>data/geocrowd.sqlite</code></td><td>Chemin du fichier SQLite, créé au premier appel dans un dossier existant et accessible en écriture par PHP. Sur un hébergement qui le permet, il est préférable de le placer hors de la racine web ; <code>config.php</code> en donne un exemple en commentaire.</td></tr>
+              <tr><td><code>data_dir</code></td><td><code>data</code></td><td>Dossier des images (<code>uploads/</code>) et de la clé de chiffrement <code>secret.php</code>. Comme <code>database</code>, il peut être placé hors de la racine web. Les dossiers absents sont créés au premier lancement ; ils doivent être accessibles en écriture par PHP.</td></tr>
+              <tr><td><code>cors_origin</code></td><td><code>'*'</code></td><td>Valeur de l'en-tête <code>Access-Control-Allow-Origin</code> de l'API publique quand les clés ne sont pas exigées : <code>'*'</code> pour toutes les origines, ou une origine unique comme <code>'https://www.exemple.org'</code>. Voir <a href="#api-cors">CORS</a>.</td></tr>
+              <tr><td><code>api_key</code></td><td><code>false</code></td><td>À <code>true</code>, toute requête à l'API publique doit porter une clé valide, sauf la lecture des images et les requêtes du site public de l'instance. Les clés se créent dans le back-office. Voir <a href="#api-auth">Clés d'API</a>.</td></tr>
+              <tr><td><code>submissions_per_hour</code></td><td><code>20</code></td><td>Nombre maximum de soumissions et de propositions de modification par adresse IP, sur une heure glissante, site public compris. En IPv6, la limite porte sur le bloc /64 de l'adresse. Au-delà, l'API répond <code>429</code>.</td></tr>
+              <tr><td><code>submissions_total_per_hour</code></td><td><code>500</code></td><td>Nombre maximum de soumissions et de propositions de modification sur une heure glissante, pour l'ensemble des visiteurs. Au-delà, l'API répond <code>429</code>.</td></tr>
+              <tr><td><code>max_pending</code></td><td><code>2000</code></td><td>Nombre de points et de propositions de modification en attente de modération au-delà duquel les envois publics sont refusés (<code>429</code>).</td></tr>
+              <tr><td><code>uploads_max_mb</code></td><td><code>2000</code></td><td>Place maximale occupée par les images, en Mo. Un envoi public avec images qui la dépasserait est refusé (<code>507</code>) ; les envois sans image restent acceptés.</td></tr>
+              <tr><td><code>reads_per_minute</code></td><td><code>120</code></td><td>Nombre maximum de lectures de listes de points (<code>GET …/points</code>) par adresse IP (bloc /64 en IPv6) et par minute, site public compris. Au-delà, l'API répond <code>429</code>.</td></tr>
+              <tr><td><code>mail</code></td><td><code>null</code></td><td>Envoi d'e-mails, nécessaire à la double authentification par e-mail. À <code>null</code>, aucun e-mail n'est envoyé et seule l'application d'authentification est proposée. Voir <a href="#envoi-emails">Envoi d'e-mails</a>.</td></tr>
+              <tr><td><code>invitation_days</code></td><td><code>7</code></td><td>Durée de validité, en jours, d'un lien d'invitation au back-office.</td></tr>
+              <tr><td><code>max_points</code></td><td><code>100000</code></td><td>Nombre maximum de points renvoyés par <code>GET …/points</code>. Les points les plus récents sont renvoyés en premier.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="envoi-emails">Envoi d'e-mails</h3>
+        <p>geocrowd n'envoie d'e-mails que pour la <a href="#methodes-2fa">double authentification par e-mail</a> et l'e-mail de test de la page <strong>Membres</strong>. L'envoi est désactivé par défaut (<code>'mail' =&gt; null</code>). Pour l'activer, la clé <code>mail</code> reçoit un tableau :</p>
+        <dl class="params">
+          <dt>from</dt>
+          <dd>Adresse de l'expéditeur. Sans adresse valide, l'envoi reste désactivé.</dd>
+          <dt>from_name</dt>
+          <dd>Nom de l'expéditeur, <code>geocrowd</code> par défaut.</dd>
+          <dt>smtp</dt>
+          <dd>Facultatif. Serveur SMTP auquel geocrowd se connecte lui-même. Sans <code>smtp</code>, l'envoi passe par la fonction <code>mail()</code> de PHP, qui dépend de la configuration de l'hébergement.</dd>
+        </dl>
+        <p>Clés du tableau <code>smtp</code> :</p>
+        <dl class="params">
+          <dt>host</dt>
+          <dd>Nom du serveur SMTP.</dd>
+          <dt>port</dt>
+          <dd>Port du serveur : 587 par défaut, 465 par défaut avec <code>'secure' =&gt; 'ssl'</code>.</dd>
+          <dt>secure</dt>
+          <dd><code>'tls'</code> (par défaut) : connexion en clair puis chiffrée par STARTTLS, en général sur le port 587. <code>'ssl'</code> : connexion chiffrée dès le départ (TLS direct), en général sur le port 465. Toute autre valeur : connexion en clair, identifiants compris.</dd>
+          <dt>user</dt>
+          <dd>Identifiant de connexion au serveur. Sans <code>user</code>, geocrowd ne s'authentifie pas.</dd>
+          <dt>password</dt>
+          <dd>Mot de passe de connexion au serveur.</dd>
+        </dl>
+<pre><code><span class="s">'mail'</span> =&gt; [
+    <span class="s">'from'</span> =&gt; <span class="s">'geocrowd@exemple.org'</span>,
+    <span class="s">'smtp'</span> =&gt; [<span class="s">'host'</span> =&gt; <span class="s">'mail.infomaniak.com'</span>, <span class="s">'port'</span> =&gt; 587, <span class="s">'secure'</span> =&gt; <span class="s">'tls'</span>,
+               <span class="s">'user'</span> =&gt; <span class="s">'geocrowd@exemple.org'</span>, <span class="s">'password'</span> =&gt; <span class="s">'…'</span>],
+],</code></pre>
+        <p>Les e-mails sont envoyés en texte brut. La page <strong>Membres</strong> indique le mode d'envoi (serveur SMTP ou fonction <code>mail()</code> de PHP) et permet d'envoyer un e-mail de test à l'adresse du compte admin connecté (voir <a href="#membres">Membres</a>). Un envoi qui échoue affiche un message invitant à vérifier la configuration ; le détail de l'erreur est écrit dans le journal PHP.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <section>
+        <h2 id="collections">Collections</h2>
+        <p>Une collection est un type de point : des bancs, des arbres, des points d'eau. Elle a ses champs, sa modération et ses règles d'envoi. Les collections se créent, se modifient et se suppriment dans le back-office, page <strong>Collections</strong>, avec l'<a href="#editeur-schema">éditeur de schéma</a> (comptes admin). Elles sont enregistrées dans la base SQLite, avec les points.</p>
+        <p>geocrowd est livré sans collection. La première se crée après le premier compte admin.</p>
+
+        <h3 id="collections-format">Définition JSON</h3>
+        <p>L'éditeur affiche la définition JSON de la collection pendant la saisie. L'API renvoie cette définition (<a href="#ep-collections"><code>GET /api/collections</code></a>), sans l'option <code>moderation</code>. Un formulaire de soumission peut ainsi être construit à partir de la réponse de l'API.</p>
+        <div class="code">
+          <div class="code-title">définition de bancs</div>
+<pre><code>{
+  "id": "bancs",
+  "name": "Bancs publics",
+  "description": "Bancs installés sur l'espace public, avec leur état.",
+  "moderation": true,
+  "public_submission": true,
+  "public_edit": true,
+  "fields": [
+    { "name": "etat", "label": "État", "type": "select", "required": true,
+      "options": ["Bon", "Abîmé", "Cassé"] },
+    { "name": "places", "label": "Places assises", "type": "number", "min": 1, "max": 20 },
+    { "name": "dossier", "label": "Avec dossier", "type": "boolean" },
+    { "name": "photos", "label": "Photos", "type": "image", "max": 3, "maxSize": 5 }
+  ]
+}</code></pre>
+        </div>
+        <p>Chaque point a une latitude et une longitude, qui ne se déclarent pas comme champs. Chaque champ a un <code>name</code> (nom technique, clé dans les données), un <code>label</code> (libellé affiché) et un <code>type</code>. Les autres options dépendent du type ; seules celles du type choisi sont conservées.</p>
+
+        <h3 id="collections-options">Options de la collection</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Option</th><th>Défaut</th><th>Rôle</th></tr></thead>
+            <tbody>
+              <tr><td><code>id</code></td><td>(obligatoire)</td><td>Identifiant utilisé dans les URL de l'API : lettres minuscules, chiffres, <code>-</code> et <code>_</code>, 50 caractères au plus. Il ne change plus après la création.</td></tr>
+              <tr><td><code>name</code></td><td>(obligatoire)</td><td>Nom affiché, 100 caractères au plus.</td></tr>
+              <tr><td><code>description</code></td><td><code>""</code></td><td>Texte facultatif, 1000 caractères au plus. Il est renvoyé par l'API et affiché sur le <a href="#site-public">site public</a>.</td></tr>
+              <tr><td><code>moderation</code></td><td><code>true</code></td><td>À <code>true</code>, les soumissions et les propositions de modification venues de l'API ou du site public attendent une validation dans le back-office. À <code>false</code>, elles sont publiées ou appliquées directement.</td></tr>
+              <tr><td><code>public_submission</code></td><td><code>true</code></td><td>Autorise la soumission de nouveaux points par l'API publique et le site public. À <code>false</code>, seuls les membres du back-office et l'import OSM ajoutent des points.</td></tr>
+              <tr><td><code>public_edit</code></td><td>valeur de <code>public_submission</code></td><td>Autorise les propositions de modification de points publiés par l'API publique et le site public.</td></tr>
+              <tr><td><code>fields</code></td><td>aucun champ</td><td>Liste des champs, 100 au plus, dans l'ordre d'affichage.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="types-de-champs">Types de champs</h3>
+        <p>Toutes les options sont facultatives sauf mention contraire. <code>required: true</code> rend le champ obligatoire. Un champ non renseigné n'est pas enregistré et n'apparaît pas dans les réponses de l'API.</p>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Type</th><th>Dans l'éditeur</th><th>Valeur en JSON</th><th>Options</th></tr></thead>
+            <tbody>
+              <tr><td><code>text</code></td><td>Texte court</td><td>chaîne sur une ligne</td><td><code>required</code>, <code>maxLength</code> (255 par défaut)</td></tr>
+              <tr><td><code>textarea</code></td><td>Texte long</td><td>chaîne sur plusieurs lignes</td><td><code>required</code>, <code>maxLength</code> (2000 par défaut)</td></tr>
+              <tr><td><code>number</code></td><td>Nombre</td><td>nombre JSON (pas une chaîne)</td><td><code>required</code>, <code>min</code>, <code>max</code></td></tr>
+              <tr><td><code>select</code></td><td>Choix unique</td><td>un des choix, à l'identique</td><td><code>required</code>, <code>options</code> (obligatoire)</td></tr>
+              <tr><td><code>multiselect</code></td><td>Choix multiples</td><td>liste de choix parmi les options</td><td><code>required</code>, <code>options</code> (obligatoire)</td></tr>
+              <tr><td><code>boolean</code></td><td>Oui / non</td><td><code>true</code> ou <code>false</code></td><td></td></tr>
+              <tr><td><code>date</code></td><td>Date</td><td>chaîne <code>AAAA-MM-JJ</code></td><td><code>required</code></td></tr>
+              <tr><td><code>url</code></td><td>Adresse web</td><td>adresse web complète, en <code>http</code> ou <code>https</code></td><td><code>required</code>, <code>maxLength</code> (500 par défaut)</td></tr>
+              <tr><td><code>image</code></td><td>Images</td><td>liste de fichiers (voir <a href="#images">Images</a>)</td><td><code>required</code>, <code>max</code> (nombre d'images, 1 par défaut), <code>maxSize</code> (Mo par image, 5 par défaut)</td></tr>
+              <tr><td><code>ref</code></td><td>Lien vers un point</td><td>numéro (entier) d'un point publié</td><td><code>required</code>, <code>collection</code> (obligatoire) : collection du point visé</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Limites des options : <code>maxLength</code> de 1 à 10 000 ; 200 choix au plus, de 200 caractères chacun ; <code>max</code> de 1 à 10 images ; <code>maxSize</code> de 1 à 20 Mo. Les espaces de début et de fin des textes sont supprimés. Les propriétés qui ne correspondent à aucun champ déclaré sont ignorées.</p>
+
+        <h3 id="champs-ref">Liens entre points</h3>
+        <p>Un champ <code>ref</code> relie un point à un point publié d'une autre collection ou de la même. Exemple : une collection <code>signalements</code> dont chaque point désigne un banc.</p>
+<pre><code>{ "name": "banc", "label": "Banc concerné", "type": "ref", "required": true, "collection": "bancs" }</code></pre>
+        <p>À la soumission, geocrowd vérifie que le point visé existe et qu'il est publié. En lecture, <code>GET /api/collections/signalements/points?banc=128</code> renvoie les signalements publiés liés au banc 128. Le site public affiche ces liens dans les deux sens.</p>
+        <p>Une collection désignée par un champ <code>ref</code> d'une autre collection ne peut pas être supprimée tant que ce champ existe.</p>
+
+        <h3 id="images">Images</h3>
+        <p>Les images sont envoyées en <code>multipart/form-data</code> (voir <a href="#ep-soumettre">Soumettre un point</a>). Formats acceptés : JPEG, PNG et WebP. À l'enregistrement, chaque image est réencodée :</p>
+        <ul>
+          <li>ses métadonnées sont supprimées, dont la géolocalisation de l'appareil et le modèle du téléphone ;</li>
+          <li>son orientation est appliquée avant la suppression des métadonnées ;</li>
+          <li>son plus grand côté est limité à 2000 pixels ;</li>
+          <li>elle reçoit un nom aléatoire de 32 caractères.</li>
+        </ul>
+        <p>Dans les réponses de l'API, la valeur d'un champ image est une liste d'URL complètes vers <a href="#ep-fichiers"><code>/api/files/{nom}</code></a>.</p>
+        <div class="note">
+          <p>La limite <code>maxSize</code> d'un champ est plafonnée par les réglages PHP de l'hébergement : <code>upload_max_filesize</code> (par fichier) et <code>post_max_size</code> (par requête). Ces valeurs se modifient dans le panneau de l'hébergeur ou dans un fichier <code>.user.ini</code>.</p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <section>
+        <h2 id="api">API publique</h2>
+        <p>L'API publique permet de lire les points publiés et d'en proposer de nouveaux, sans compte. Elle échange du JSON encodé en UTF-8. Les points sont renvoyés en <a href="https://datatracker.ietf.org/doc/html/rfc7946">GeoJSON</a>, format lu par Leaflet, MapLibre, OpenLayers et QGIS.</p>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Méthode</th><th>Chemin</th><th>Rôle</th></tr></thead>
+            <tbody>
+              <tr><td><span class="method">GET</span></td><td><a href="#ep-collections"><code>/api/collections</code></a></td><td>Liste des collections</td></tr>
+              <tr><td><span class="method">GET</span></td><td><a href="#ep-collection"><code>/api/collections/{id}</code></a></td><td>Une collection</td></tr>
+              <tr><td><span class="method">GET</span></td><td><a href="#ep-points"><code>/api/collections/{id}/points</code></a></td><td>Points publiés, avec filtres</td></tr>
+              <tr><td><span class="method">GET</span></td><td><a href="#ep-point"><code>/api/collections/{id}/points/{n}</code></a></td><td>Un point publié</td></tr>
+              <tr><td><span class="method post">POST</span></td><td><a href="#ep-soumettre"><code>/api/collections/{id}/points</code></a></td><td>Soumission d'un point</td></tr>
+              <tr><td><span class="method post">POST</span></td><td><a href="#ep-modifier"><code>/api/collections/{id}/points/{n}</code></a></td><td>Proposition de modification d'un point</td></tr>
+              <tr><td><span class="method">GET</span></td><td><a href="#ep-fichiers"><code>/api/files/{nom}</code></a></td><td>Image d'un point</td></tr>
+              <tr><td><span class="method">GET</span></td><td><a href="#ep-front"><code>/api/front</code></a></td><td>Configuration du site public</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="api-base">URL de base</h3>
+        <p>L'API répond sous <code>/api/</code>, à l'adresse d'installation de geocrowd. Dans cette documentation, l'instance est à <code>https://votre-instance.org</code> :</p>
+<pre><code>https://votre-instance.org/api/collections</code></pre>
+        <p>Pour une installation dans un sous-dossier : <code>https://www.exemple.org/<wbr>geocrowd/<wbr>api/<wbr>collections</code>.</p>
+
+        <h3 id="api-auth">Authentification par clé d'API</h3>
+        <p>Par défaut, l'API est ouverte. Avec <code>'api_key' =&gt; true</code> dans <code>config.php</code>, chaque requête doit porter une clé, sauf <code>GET /api/files/{nom}</code> (les noms d'images sont aléatoires, et une balise <code>&lt;img&gt;</code> ne peut pas envoyer de clé) et les requêtes du <a href="#site-public-cles">site public</a> de l'instance.</p>
+        <p>La clé, de la forme <code>gc_…</code>, s'envoie :</p>
+        <ul>
+          <li>dans l'en-tête <code>X-Api-Key: gc_…</code> (recommandé) ;</li>
+          <li>ou dans le paramètre d'URL <code>?key=gc_…</code>, pour un lien ou un outil qui ne gère pas les en-têtes. L'URL complète peut alors figurer dans les journaux des serveurs et l'historique du navigateur.</li>
+        </ul>
+        <div class="tabs">
+          <div class="code" data-label="curl">
+            <div class="code-title">curl</div>
+<pre><code>curl -H <span class="s">'X-Api-Key: gc_VOTRE_CLE'</span> https://votre-instance.org/api/collections
+
+<span class="c"># ou</span>
+curl <span class="s">'https://votre-instance.org/api/collections?key=gc_VOTRE_CLE'</span></code></pre>
+          </div>
+          <div class="code" data-label="JavaScript">
+            <div class="code-title">JavaScript (fetch)</div>
+<pre><code><span class="k">const</span> reponse = <span class="k">await</span> fetch(<span class="s">'https://votre-instance.org/api/collections'</span>, {
+  headers: { <span class="s">'X-Api-Key'</span>: <span class="s">'gc_VOTRE_CLE'</span> },
+});</code></pre>
+          </div>
+        </div>
+        <p>Les clés sont créées par un compte admin, page <a href="#cles-api">Clés d'API</a> du back-office. Une clé est limitée à des domaines ou non.</p>
+
+        <h4>Clé limitée à des domaines (page web)</h4>
+        <p>Usage : une carte en JavaScript sur un autre site, qui interroge l'API depuis le navigateur des visiteurs. La clé est lisible dans le code de la page ; la protection repose sur la liste des domaines autorisés. La requête doit venir d'une page de l'un de ces domaines, ce que geocrowd vérifie avec l'en-tête <code>Origin</code> envoyé par le navigateur, ou à défaut l'en-tête <code>Referer</code>.</p>
+        <p>Les domaines s'écrivent un par ligne :</p>
+<pre><code>exemple.org
+www.exemple.org
+*.exemple.org      <span class="c"># tous les sous-domaines (pas exemple.org lui-même)</span>
+localhost          <span class="c"># développement local</span></code></pre>
+        <p>Seul le nom de domaine compte : le protocole et le port sont ignorés (<code>http://localhost:8080</code> correspond à <code>localhost</code>). Une adresse complète saisie dans le champ est ramenée à son domaine.</p>
+        <p>La même clé utilisée sur un autre site reçoit une erreur <code>403</code> : le navigateur annonce un autre domaine, et une page web ne peut pas modifier ces en-têtes.</p>
+        <div class="warn">
+          <strong>Limite de cette protection</strong>
+          <p>Les en-têtes <code>Origin</code> et <code>Referer</code> sont fixés par le navigateur, mais un programme exécuté hors d'un navigateur (curl, Python, robot) peut leur donner n'importe quelle valeur. La restriction de domaine empêche l'usage de la clé par d'autres sites web ; elle n'empêche pas l'interrogation de l'API par un programme. Les soumissions restent soumises aux limites de débit, au champ piège et à la modération.</p>
+        </div>
+
+        <h4>Clé sans domaine (serveur ou script)</h4>
+        <p>Une clé sans domaine est acceptée quelle que soit la provenance de la requête : serveur de synchronisation, script d'export, application mobile compilée. Elle doit rester secrète, hors de toute page web et de tout dépôt de code public. En cas de fuite, elle doit être révoquée et remplacée.</p>
+
+        <h4>Recommandations</h4>
+        <ul>
+          <li>Une clé par site ou par usage, avec un nom explicite (« Carte du site », « Export mensuel »), pour pouvoir en révoquer une sans interrompre les autres.</li>
+          <li>La date de dernière utilisation, affichée dans le back-office, permet de repérer les clés inutilisées.</li>
+          <li>Seul un hachage de la clé est stocké : une clé perdue ne peut pas être réaffichée, il faut en créer une autre.</li>
+        </ul>
+
+        <h3 id="api-cors">CORS</h3>
+        <p>Pour que les pages d'autres domaines puissent lire les réponses, l'API envoie les en-têtes CORS suivants :</p>
+        <ul>
+          <li><code>Access-Control-Allow-Origin</code> :
+            <ul>
+              <li>clés non exigées (<code>'api_key' =&gt; false</code>) : la valeur de <code>cors_origin</code> dans <code>config.php</code>, <code>*</code> par défaut ;</li>
+              <li>clés exigées : l'origine de la page appelante quand l'une des clés l'autorise, sinon la valeur de <code>cors_origin</code>.</li>
+            </ul>
+          </li>
+          <li><code>Access-Control-Allow-Methods: GET, POST</code></li>
+          <li><code>Access-Control-Allow-Headers: Content-Type, X-Api-Key</code></li>
+          <li><code>Vary: Origin</code>, pour que les caches ne mélangent pas les réponses destinées à deux sites.</li>
+        </ul>
+        <p>Une requête qui envoie l'en-tête <code>X-Api-Key</code> ou un corps JSON déclenche d'abord une requête de contrôle <code>OPTIONS</code> du navigateur, à laquelle l'API répond <code>204</code>. Le paramètre <code>?key=</code> dans une requête <code>GET</code> évite cet aller-retour.</p>
+
+        <h3 id="api-format">Format des réponses</h3>
+        <p>Un point est une <code>Feature</code> GeoJSON :</p>
+        <div class="code">
+          <div class="code-title">Feature</div>
+<pre><code>{
+  "type": "Feature",
+  "id": 128,
+  "geometry": { "type": "Point", "coordinates": [4.8357, 45.764] },
+  "properties": {
+    "etat": "Abîmé",
+    "places": 4,
+    "dossier": true,
+    "photos": [
+      "https://votre-instance.org/api/files/3f2a9c0d41b7e8a65c1d2e3f4a5b6c7d.jpg"
+    ],
+    "created_at": "2026-10-02T14:31:07Z"
+  }
+}</code></pre>
+        </div>
+        <ul>
+          <li><code>id</code> : numéro du point, unique dans l'instance. C'est le <code>{n}</code> des URL et la valeur des champs <code>ref</code>.</li>
+          <li><code>geometry.coordinates</code> : <strong>longitude puis latitude</strong>, dans l'ordre imposé par GeoJSON. Les soumissions utilisent des champs nommés <code>lat</code> et <code>lng</code>.</li>
+          <li><code>properties</code> : uniquement les champs renseignés. Un champ vide est absent, et non <code>null</code>.</li>
+          <li>Champs image : URL complètes, utilisables dans une balise <code>&lt;img&gt;</code>.</li>
+          <li><code>created_at</code> : date de création du point, en UTC, au format ISO 8601.</li>
+        </ul>
+        <p>Une liste de points est une <code>FeatureCollection</code> :</p>
+<pre><code>{ "type": "FeatureCollection", "features": [ { "type": "Feature", … }, … ] }</code></pre>
+
+        <h3 id="api-erreurs">Erreurs et codes HTTP</h3>
+        <p>Une erreur renvoie un objet JSON avec un message en français. Les erreurs de validation y ajoutent <code>details</code>, un message par champ :</p>
+<pre><code>{
+  "error": "Certains champs sont invalides.",
+  "details": {
+    "etat": "Champ obligatoire.",
+    "places": "Maximum : 20."
+  }
+}</code></pre>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Code</th><th>Signification</th></tr></thead>
+            <tbody>
+              <tr><td><code>200</code></td><td>Lecture réussie.</td></tr>
+              <tr><td><code>201</code></td><td>Soumission ou proposition enregistrée : <code>{"status": "pending"}</code> ou <code>{"status": "published"}</code>.</td></tr>
+              <tr><td><code>204</code></td><td>Réponse à une requête de contrôle CORS <code>OPTIONS</code>.</td></tr>
+              <tr><td><code>400</code></td><td>Requête mal formée : corps qui n'est pas un objet JSON, <code>bbox</code> incomplète, filtre inconnu.</td></tr>
+              <tr><td><code>401</code></td><td><code>{"error": "Clé d'API manquante ou invalide."}</code> : clé absente, inconnue ou révoquée.</td></tr>
+              <tr><td><code>403</code></td><td><code>{"error": "Domaine non autorisé pour cette clé."}</code>, ou collection fermée aux soumissions ou aux modifications publiques.</td></tr>
+              <tr><td><code>404</code></td><td>Collection, point ou image introuvable. Un point en attente ou refusé est introuvable pour l'API publique. <code>GET /api/front</code> renvoie aussi <code>404</code> quand le site public est désactivé.</td></tr>
+              <tr><td><code>405</code></td><td>Méthode non autorisée sur ce chemin.</td></tr>
+              <tr><td><code>413</code></td><td>Requête trop volumineuse : corps JSON de plus de 64 Ko, ou envoi dépassant la limite de PHP (<code>post_max_size</code>).</td></tr>
+              <tr><td><code>422</code></td><td>Données invalides, avec <code>details</code> par champ. Position invalide : <code>details.position</code>.</td></tr>
+              <tr><td><code>429</code></td><td>Limite de débit atteinte (voir <a href="#api-limites">Limites de débit</a>) : « Trop de soumissions, réessayez plus tard. » (limite par adresse IP), « Trop de soumissions sur l'ensemble du site, réessayez plus tard. » (limite globale), « La file de modération est pleine, réessayez plus tard. », ou « Trop de requêtes, réessayez dans une minute. » (lectures de listes de points).</td></tr>
+              <tr><td><code>500</code></td><td>Erreur interne. Le détail est écrit dans le journal d'erreurs PHP, jamais dans la réponse.</td></tr>
+              <tr><td><code>507</code></td><td>« L'espace réservé aux images est plein. » : un envoi avec images dépasserait la place maximale des images.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="api-limites">Limites de débit</h3>
+        <p>L'API publique limite les envois et les lectures coûteuses, site public compris. Les valeurs se règlent dans <a href="#configuration"><code>config.php</code></a>. Les membres du back-office n'y sont pas soumis.</p>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Limite</th><th>Défaut</th><th>Réponse au-delà</th></tr></thead>
+            <tbody>
+              <tr><td>Soumissions et propositions de modification par adresse IP</td><td>20 par heure (<code>submissions_per_hour</code>)</td><td><code>429</code> « Trop de soumissions, réessayez plus tard. »</td></tr>
+              <tr><td>Soumissions et propositions de modification pour l'ensemble des visiteurs</td><td>500 par heure (<code>submissions_total_per_hour</code>)</td><td><code>429</code> « Trop de soumissions sur l'ensemble du site, réessayez plus tard. »</td></tr>
+              <tr><td>Points et propositions en attente de modération</td><td>2000 (<code>max_pending</code>)</td><td><code>429</code> « La file de modération est pleine, réessayez plus tard. »</td></tr>
+              <tr><td>Place occupée par les images, pour un envoi avec images</td><td>2000 Mo (<code>uploads_max_mb</code>)</td><td><code>507</code> « L'espace réservé aux images est plein. »</td></tr>
+              <tr><td>Lectures de listes de points (<code>GET …/points</code>) par adresse IP</td><td>120 par minute (<code>reads_per_minute</code>)</td><td><code>429</code> « Trop de requêtes, réessayez dans une minute. »</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <ul>
+          <li>Les durées sont des fenêtres glissantes : une heure, ou une minute pour les lectures.</li>
+          <li>En IPv6, les limites par adresse portent sur le bloc /64 de l'adresse : une seule connexion dispose de tout un bloc et pourrait sinon changer d'adresse à chaque requête.</li>
+          <li>Chaque envoi compte, y compris un envoi ensuite refusé (champ invalide, file de modération pleine). Un envoi qui remplit le <a href="#ep-soumettre">champ piège</a> ne compte pas.</li>
+          <li>La lecture des collections, d'un point seul et des images n'est pas limitée.</li>
+          <li>Les réponses <code>429</code> ne portent pas d'en-tête <code>Retry-After</code>.</li>
+          <li>Les adresses IP ne sont conservées que sous forme de hachage (voir <a href="#securite">Sécurité</a>).</li>
+        </ul>
+
+        <!-- Lister les collections -->
+        <div class="endpoint">
+          <h3 id="ep-collections">Lister les collections</h3>
+          <p class="route"><span class="method">GET</span> /api/collections</p>
+          <p>Renvoie toutes les collections, avec leur description, leurs champs tels que définis dans l'<a href="#editeur-schema">éditeur de schéma</a> et leur nombre de points publiés.</p>
+          <div class="tabs">
+            <div class="code" data-label="curl">
+              <div class="code-title">curl</div>
+<pre><code>curl -H <span class="s">'X-Api-Key: gc_VOTRE_CLE'</span> https://votre-instance.org/api/collections</code></pre>
+            </div>
+            <div class="code" data-label="JavaScript">
+              <div class="code-title">JavaScript (fetch)</div>
+<pre><code><span class="k">const</span> reponse = <span class="k">await</span> fetch(<span class="s">'https://votre-instance.org/api/collections'</span>, {
+  headers: { <span class="s">'X-Api-Key'</span>: <span class="s">'gc_VOTRE_CLE'</span> },
+});
+<span class="k">const</span> collections = <span class="k">await</span> reponse.json();</code></pre>
+            </div>
+          </div>
+          <div class="code">
+            <div class="code-title">Réponse 200</div>
+<pre><code>[
+  {
+    "id": "bancs",
+    "name": "Bancs publics",
+    "description": "Bancs installés sur l'espace public, avec leur état.",
+    "public_submission": true,
+    "public_edit": true,
+    "fields": [
+      { "name": "etat", "label": "État", "type": "select", "required": true,
+        "options": ["Bon", "Abîmé", "Cassé"] },
+      { "name": "photos", "label": "Photos", "type": "image", "max": 3, "maxSize": 5 }
+    ],
+    "count": 1240
+  },
+  {
+    "id": "signalements",
+    "name": "Signalements",
+    "description": "",
+    "public_submission": true,
+    "public_edit": false,
+    "fields": [
+      { "name": "banc", "label": "Banc concerné", "type": "ref", "required": true, "collection": "bancs" },
+      { "name": "constat", "label": "Constat", "type": "multiselect", "required": true,
+        "options": ["Assise cassée", "Pied descellé", "Graffitis", "Peinture écaillée", "Autre"] }
+    ],
+    "count": 87
+  }
+]</code></pre>
+          </div>
+          <p>Les champs sont abrégés ici. <code>description</code> vaut <code>""</code> quand la collection n'en a pas. L'option <code>moderation</code> n'est pas exposée : la réponse d'une soumission indique si le point attend une validation.</p>
+        </div>
+
+        <!-- Lire une collection -->
+        <div class="endpoint">
+          <h3 id="ep-collection">Lire une collection</h3>
+          <p class="route"><span class="method">GET</span> /api/collections/{id}</p>
+          <p>Renvoie une collection, au même format qu'un élément de la liste précédente. <code>404</code> si elle n'existe pas.</p>
+          <div class="tabs">
+            <div class="code" data-label="curl">
+              <div class="code-title">curl</div>
+<pre><code>curl -H <span class="s">'X-Api-Key: gc_VOTRE_CLE'</span> https://votre-instance.org/api/collections/bancs</code></pre>
+            </div>
+            <div class="code" data-label="JavaScript">
+              <div class="code-title">JavaScript (fetch)</div>
+<pre><code><span class="k">const</span> reponse = <span class="k">await</span> fetch(<span class="s">'https://votre-instance.org/api/collections/bancs'</span>, {
+  headers: { <span class="s">'X-Api-Key'</span>: <span class="s">'gc_VOTRE_CLE'</span> },
+});
+<span class="k">const</span> { name, description, fields, count } = <span class="k">await</span> reponse.json();</code></pre>
+            </div>
+          </div>
+          <div class="code">
+            <div class="code-title">Réponse 200</div>
+<pre><code>{
+  "id": "bancs",
+  "name": "Bancs publics",
+  "description": "Bancs installés sur l'espace public, avec leur état.",
+  "public_submission": true,
+  "public_edit": true,
+  "fields": [ … ],
+  "count": 1240
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- Lire les points -->
+        <div class="endpoint">
+          <h3 id="ep-points">Lire les points d'une collection</h3>
+          <p class="route"><span class="method">GET</span> /api/collections/{id}/points</p>
+          <p>Renvoie les points publiés de la collection, en <code>FeatureCollection</code> GeoJSON, du plus récent au plus ancien. Les points en attente ou refusés n'apparaissent pas.</p>
+          <h4>Paramètres d'URL</h4>
+          <p>Tous facultatifs et combinables.</p>
+          <dl class="params">
+            <dt>bbox</dt>
+            <dd>Emprise <code>ouest,sud,est,nord</code> en degrés décimaux (longitude, latitude, longitude, latitude). Seuls les points situés à l'intérieur sont renvoyés. Exemple : <code>bbox=4.80,45.74,4.87,45.78</code>.</dd>
+            <dt>{champ_ref}</dt>
+            <dd>Pour chaque champ de type <code>ref</code> : ne garde que les points liés au point indiqué. Exemple : <code>/api/collections/signalements/points?banc=128</code>.</dd>
+            <dt>with</dt>
+            <dd>Nom d'un champ : ne garde que les points où ce champ est renseigné. Exemple : <code>/api/collections/bancs/points?with=photos</code> renvoie les bancs qui ont au moins une photo.</dd>
+            <dt>key</dt>
+            <dd>Clé d'API, si elle n'est pas envoyée dans l'en-tête <code>X-Api-Key</code>.</dd>
+          </dl>
+          <h4>Volume et performances</h4>
+          <ul>
+            <li>Au plus <code>max_points</code> points sont renvoyés (100 000 par défaut), sans pagination. Au-delà, les plus anciens sont omis. Pour une grande collection, le paramètre <code>bbox</code> limite la réponse à la zone affichée.</li>
+            <li>La réponse est envoyée au fil de l'eau, point par point : le serveur ne charge pas toute la liste en mémoire.</li>
+            <li>Chaque adresse IP peut faire <code>reads_per_minute</code> lectures de listes par minute (120 par défaut) ; au-delà, <code>429</code> (voir <a href="#api-limites">Limites de débit</a>). Une carte qui recharge les points à chaque déplacement fait une lecture par déplacement.</li>
+            <li>Elle est compressée (gzip) quand le client l'accepte. Avec curl : option <code>--compressed</code>. Sur Apache, la compression demande <code>mod_deflate</code> ; sur Nginx, la directive <code>gzip</code>.</li>
+          </ul>
+          <div class="tabs">
+            <div class="code" data-label="curl">
+              <div class="code-title">curl</div>
+<pre><code>curl --compressed -H <span class="s">'X-Api-Key: gc_VOTRE_CLE'</span> \
+  <span class="s">'https://votre-instance.org/api/collections/bancs/points?bbox=4.80,45.74,4.87,45.78&amp;with=photos'</span></code></pre>
+            </div>
+            <div class="code" data-label="JavaScript">
+              <div class="code-title">JavaScript (fetch)</div>
+<pre><code><span class="k">const</span> params = <span class="k">new</span> URLSearchParams({
+  bbox: [4.80, 45.74, 4.87, 45.78].join(<span class="s">','</span>),
+  with: <span class="s">'photos'</span>,
+});
+<span class="k">const</span> reponse = <span class="k">await</span> fetch(
+  <span class="s">`https://votre-instance.org/api/collections/bancs/points?${params}`</span>,
+  { headers: { <span class="s">'X-Api-Key'</span>: <span class="s">'gc_VOTRE_CLE'</span> } },
+);
+<span class="k">const</span> { features } = <span class="k">await</span> reponse.json();</code></pre>
+            </div>
+          </div>
+          <div class="code">
+            <div class="code-title">Réponse 200</div>
+<pre><code>{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": 128,
+      "geometry": { "type": "Point", "coordinates": [4.8357, 45.764] },
+      "properties": {
+        "etat": "Abîmé",
+        "places": 4,
+        "dossier": true,
+        "photos": ["https://votre-instance.org/api/files/3f2a9c0d41b7e8a65c1d2e3f4a5b6c7d.jpg"],
+        "created_at": "2026-10-02T14:31:07Z"
+      }
+    }
+  ]
+}</code></pre>
+          </div>
+          <p>Erreurs propres à cette route : <code>400</code> avec <code>bbox attendu : ouest,sud,est,nord.</code>, <code>banc : numéro de point attendu.</code> (sur <code>signalements</code>) ou <code>with : champ inconnu.</code> ; <code>429</code> avec <code>Trop de requêtes, réessayez dans une minute.</code></p>
+        </div>
+
+        <!-- Lire un point -->
+        <div class="endpoint">
+          <h3 id="ep-point">Lire un point</h3>
+          <p class="route"><span class="method">GET</span> /api/collections/{id}/points/{n}</p>
+          <p>Renvoie un point publié, en <code>Feature</code> GeoJSON. <code>404</code> (« Point introuvable. ») si le point n'existe pas, s'il appartient à une autre collection ou s'il n'est pas publié.</p>
+          <div class="tabs">
+            <div class="code" data-label="curl">
+              <div class="code-title">curl</div>
+<pre><code>curl -H <span class="s">'X-Api-Key: gc_VOTRE_CLE'</span> https://votre-instance.org/api/collections/bancs/points/128</code></pre>
+            </div>
+            <div class="code" data-label="JavaScript">
+              <div class="code-title">JavaScript (fetch)</div>
+<pre><code><span class="k">const</span> reponse = <span class="k">await</span> fetch(<span class="s">'https://votre-instance.org/api/collections/bancs/points/128'</span>, {
+  headers: { <span class="s">'X-Api-Key'</span>: <span class="s">'gc_VOTRE_CLE'</span> },
+});
+<span class="k">if</span> (reponse.status === 404) {
+  <span class="c">// point supprimé ou pas encore validé</span>
+}
+<span class="k">const</span> banc = <span class="k">await</span> reponse.json();
+<span class="k">const</span> [lng, lat] = banc.geometry.coordinates;</code></pre>
+            </div>
+          </div>
+          <div class="code">
+            <div class="code-title">Réponse 200</div>
+<pre><code>{
+  "type": "Feature",
+  "id": 128,
+  "geometry": { "type": "Point", "coordinates": [4.8357, 45.764] },
+  "properties": {
+    "etat": "Abîmé",
+    "places": 4,
+    "dossier": true,
+    "photos": ["https://votre-instance.org/api/files/3f2a9c0d41b7e8a65c1d2e3f4a5b6c7d.jpg"],
+    "created_at": "2026-10-02T14:31:07Z"
+  }
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- Soumettre un point -->
+        <div class="endpoint">
+          <h3 id="ep-soumettre">Soumettre un point</h3>
+          <p class="route"><span class="method post">POST</span> /api/collections/{id}/points</p>
+          <p>Propose un nouveau point. Si la collection a une modération, le point attend une validation dans le back-office ; sinon, il est publié immédiatement. Possible seulement si <code>public_submission</code> vaut <code>true</code> (sinon <code>403</code>).</p>
+          <h4>Corps de la requête</h4>
+          <dl class="params">
+            <dt>lat, lng</dt>
+            <dd>Obligatoires. Latitude (−90 à 90) et longitude (−180 à 180), en nombres JSON.</dd>
+            <dt>properties</dt>
+            <dd>Objet des champs de la collection. Chaque valeur est validée selon son <a href="#types-de-champs">type</a>.</dd>
+            <dt>website</dt>
+            <dd>Champ piège, à laisser vide (voir plus bas).</dd>
+          </dl>
+          <p>Deux formats sont acceptés :</p>
+          <ul>
+            <li><strong>Sans image</strong> : un corps JSON (<code>Content-Type: application/json</code>), 64 Ko au plus.</li>
+            <li><strong>Avec images</strong> : <code>multipart/form-data</code>, avec le même objet JSON dans le champ <code>data</code> et les fichiers dans des champs nommés comme la propriété image suivie de <code>[]</code> (<code>photos[]</code>).</li>
+          </ul>
+          <div class="tabs">
+            <div class="code" data-label="curl">
+              <div class="code-title">curl</div>
+<pre><code><span class="c"># Sans image</span>
+curl -X POST https://votre-instance.org/api/collections/bancs/points \
+  -H <span class="s">'X-Api-Key: gc_VOTRE_CLE'</span> \
+  -H <span class="s">'Content-Type: application/json'</span> \
+  -d <span class="s">'{
+    "lat": 45.764,
+    "lng": 4.8357,
+    "properties": {
+      "etat": "Abîmé",
+      "places": 4,
+      "dossier": true
+    }
+  }'</span>
+
+<span class="c"># Avec images</span>
+curl -X POST https://votre-instance.org/api/collections/signalements/points \
+  -H <span class="s">'X-Api-Key: gc_VOTRE_CLE'</span> \
+  -F <span class="s">'data={"lat": 45.764, "lng": 4.8357, "properties": {"banc": 128, "constat": ["Assise cassée"], "description": "Deux lattes manquent."}}'</span> \
+  -F <span class="s">'photos[]=@banc.jpg'</span> \
+  -F <span class="s">'photos[]=@detail.jpg'</span></code></pre>
+            </div>
+            <div class="code" data-label="JavaScript">
+              <div class="code-title">JavaScript (fetch)</div>
+<pre><code><span class="c">// Sans image</span>
+<span class="k">await</span> fetch(<span class="s">'https://votre-instance.org/api/collections/bancs/points'</span>, {
+  method: <span class="s">'POST'</span>,
+  headers: { <span class="s">'X-Api-Key'</span>: <span class="s">'gc_VOTRE_CLE'</span>, <span class="s">'Content-Type'</span>: <span class="s">'application/json'</span> },
+  body: JSON.stringify({
+    lat: 45.764,
+    lng: 4.8357,
+    properties: { etat: <span class="s">'Abîmé'</span>, places: 4, dossier: <span class="k">true</span> },
+  }),
+});
+
+<span class="c">// Avec images, depuis un formulaire contenant &lt;input type="file" name="photos" multiple&gt;</span>
+<span class="k">const</span> donnees = <span class="k">new</span> FormData();
+donnees.append(<span class="s">'data'</span>, JSON.stringify({
+  lat: 45.764,
+  lng: 4.8357,
+  properties: { banc: 128, constat: [<span class="s">'Assise cassée'</span>], description: formulaire.description.value },
+  website: formulaire.website.value, <span class="c">// champ piège</span>
+}));
+<span class="k">for</span> (<span class="k">const</span> fichier <span class="k">of</span> formulaire.photos.files) {
+  donnees.append(<span class="s">'photos[]'</span>, fichier);
+}
+<span class="c">// Content-Type non fixé : le navigateur l'écrit avec la frontière multipart.</span>
+<span class="k">const</span> reponse = <span class="k">await</span> fetch(<span class="s">'https://votre-instance.org/api/collections/signalements/points'</span>, {
+  method: <span class="s">'POST'</span>,
+  headers: { <span class="s">'X-Api-Key'</span>: <span class="s">'gc_VOTRE_CLE'</span> },
+  body: donnees,
+});
+<span class="k">const</span> resultat = <span class="k">await</span> reponse.json();
+<span class="k">if</span> (reponse.status === 422) {
+  <span class="c">// resultat.details : { "constat": "Champ obligatoire.", … }</span>
+}</code></pre>
+            </div>
+          </div>
+          <div class="code">
+            <div class="code-title">Réponse 201</div>
+<pre><code>{ "status": "pending" }      <span class="c">// en attente de modération</span>
+{ "status": "published" }    <span class="c">// collection sans modération : point publié</span></code></pre>
+          </div>
+          <div class="code">
+            <div class="code-title">Réponse 422</div>
+<pre><code>{
+  "error": "Certains champs sont invalides.",
+  "details": {
+    "etat": "Champ obligatoire.",
+    "photos": "3 image(s) maximum."
+  }
+}</code></pre>
+          </div>
+          <p>La réponse ne contient pas le numéro du point : un point en attente n'est pas lisible par l'API publique avant sa validation.</p>
+
+          <h4>Limites</h4>
+          <p>Chaque adresse IP (bloc /64 en IPv6) peut envoyer <code>submissions_per_hour</code> soumissions par heure (20 par défaut), propositions de modification comprises, et l'ensemble des visiteurs <code>submissions_total_per_hour</code> (500 par défaut). Les envois sont aussi refusés quand la file de modération est pleine (<code>max_pending</code>) et, avec des images, quand la place des images est épuisée (<code>uploads_max_mb</code>). Chaque envoi compte, y compris un envoi refusé pour un champ invalide. Au-delà, l'API répond <code>429</code> ou <code>507</code> : détail dans <a href="#api-limites">Limites de débit</a>. Les adresses ne sont conservées que sous forme de hachage, supprimé au bout d'une heure.</p>
+
+          <h4>Champ piège</h4>
+          <p>Les robots qui parcourent le web remplissent tous les champs d'un formulaire. Le formulaire comporte donc un champ <code>website</code> masqué, dont la valeur est recopiée dans l'objet JSON envoyé, à côté de <code>lat</code> et <code>lng</code>. Si ce champ est rempli, l'API répond <code>201</code> mais n'enregistre rien.</p>
+          <div class="code">
+            <div class="code-title">HTML</div>
+<pre><code><span class="c">&lt;!-- Masqué à l'écran et pour les lecteurs d'écran, ignoré au clavier. --&gt;</span>
+&lt;div style="position: absolute; left: -10000px" aria-hidden="true"&gt;
+  &lt;label&gt;Ne pas remplir &lt;input name="website" tabindex="-1" autocomplete="off"&gt;&lt;/label&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+        </div>
+
+        <!-- Proposer une modification -->
+        <div class="endpoint">
+          <h3 id="ep-modifier">Proposer une modification d'un point</h3>
+          <p class="route"><span class="method post">POST</span> /api/collections/{id}/points/{n}</p>
+          <p>Propose une correction d'un point publié : nouvelle position, champ complété ou vidé, image ajoutée ou retirée. Si la collection a une modération, la proposition attend une décision dans le back-office, page <a href="#modifications">Modifications</a>. Sinon, elle est appliquée directement.</p>
+          <p>Possible seulement si l'option <code>public_edit</code> de la collection vaut <code>true</code> (par défaut, elle suit <code>public_submission</code>) : sinon <code>403</code>. <code>404</code> si le point n'existe pas ou n'est pas publié.</p>
+
+          <h4>Corps de la requête</h4>
+          <p>Même format qu'une <a href="#ep-soumettre">soumission</a> (JSON, ou <code>multipart/form-data</code> avec le JSON dans <code>data</code>), mais tout est facultatif : seules les modifications sont envoyées.</p>
+          <dl class="params">
+            <dt>lat, lng</dt>
+            <dd>Nouvelle position. Les deux valeurs sont envoyées ensemble.</dd>
+            <dt>properties</dt>
+            <dd>Champs modifiés uniquement. <code>null</code> ou <code>""</code> vide un champ. Les champs absents gardent leur valeur actuelle.</dd>
+            <dt>comment</dt>
+            <dd>Texte libre, 1000 caractères au plus, destiné à la modération (« Banc remplacé en septembre, photo jointe »). Il n'est pas publié.</dd>
+            <dt>website</dt>
+            <dd>Champ piège, à laisser vide, comme pour une soumission.</dd>
+          </dl>
+
+          <h4>Champs image</h4>
+          <ul>
+            <li>Champ absent de <code>properties</code> : les images ne changent pas.</li>
+            <li>Champ présent : sa valeur est la liste des images actuelles <strong>à conserver</strong>, sous forme d'URL renvoyées par l'API ou de noms de fichier. Les images non listées sont retirées.</li>
+            <li>Les fichiers envoyés dans <code>photos[]</code> s'ajoutent aux images conservées. Le total doit respecter l'option <code>max</code> du champ.</li>
+          </ul>
+
+          <h4>Validation</h4>
+          <p>Seuls les champs envoyés sont validés, avec les mêmes règles qu'une soumission : un point importé dont un autre champ sort des options peut donc être corrigé. Un champ obligatoire vidé ou une valeur hors des options renvoie <code>422</code> avec le détail par champ. Si le résultat est identique au point actuel : <code>422</code> avec le message « Aucune modification. » Les <a href="#api-limites">limites de débit</a> et le champ piège sont les mêmes que pour les soumissions.</p>
+
+          <div class="tabs">
+            <div class="code" data-label="curl">
+              <div class="code-title">curl</div>
+<pre><code><span class="c"># Corriger deux champs et en vider un</span>
+curl -X POST https://votre-instance.org/api/collections/bancs/points/128 \
+  -H <span class="s">'X-Api-Key: gc_VOTRE_CLE'</span> \
+  -H <span class="s">'Content-Type: application/json'</span> \
+  -d <span class="s">'{
+    "properties": {
+      "etat": "Bon",
+      "dossier": true,
+      "places": null
+    },
+    "comment": "Banc remplacé en septembre par un modèle avec dossier."
+  }'</span>
+
+<span class="c"># Déplacer le point</span>
+curl -X POST https://votre-instance.org/api/collections/bancs/points/128 \
+  -H <span class="s">'X-Api-Key: gc_VOTRE_CLE'</span> \
+  -H <span class="s">'Content-Type: application/json'</span> \
+  -d <span class="s">'{"lat": 45.7643, "lng": 4.8361, "comment": "Le banc est de l’autre côté de la place."}'</span>
+
+<span class="c"># Conserver une image existante et en ajouter une</span>
+curl -X POST https://votre-instance.org/api/collections/bancs/points/128 \
+  -H <span class="s">'X-Api-Key: gc_VOTRE_CLE'</span> \
+  -F <span class="s">'data={"properties": {"photos": ["https://votre-instance.org/api/files/3f2a9c0d41b7e8a65c1d2e3f4a5b6c7d.jpg"]}, "comment": "Photo du nouveau banc."}'</span> \
+  -F <span class="s">'photos[]=@nouveau-banc.jpg'</span></code></pre>
+            </div>
+            <div class="code" data-label="JavaScript">
+              <div class="code-title">JavaScript (fetch)</div>
+<pre><code><span class="k">const</span> url = <span class="s">'https://votre-instance.org/api/collections/bancs/points/128'</span>;
+
+<span class="c">// Corriger deux champs et en vider un</span>
+<span class="k">await</span> fetch(url, {
+  method: <span class="s">'POST'</span>,
+  headers: { <span class="s">'X-Api-Key'</span>: <span class="s">'gc_VOTRE_CLE'</span>, <span class="s">'Content-Type'</span>: <span class="s">'application/json'</span> },
+  body: JSON.stringify({
+    properties: { etat: <span class="s">'Bon'</span>, dossier: <span class="k">true</span>, places: <span class="k">null</span> },
+    comment: <span class="s">'Banc remplacé en septembre par un modèle avec dossier.'</span>,
+  }),
+});
+
+<span class="c">// Retirer une image sur deux et en ajouter une</span>
+<span class="k">const</span> point = <span class="k">await</span> (<span class="k">await</span> fetch(url, { headers: { <span class="s">'X-Api-Key'</span>: <span class="s">'gc_VOTRE_CLE'</span> } })).json();
+<span class="k">const</span> aGarder = point.properties.photos.slice(0, 1);
+<span class="k">const</span> donnees = <span class="k">new</span> FormData();
+donnees.append(<span class="s">'data'</span>, JSON.stringify({
+  properties: { photos: aGarder },
+  comment: <span class="s">'La deuxième photo montrait un autre banc.'</span>,
+}));
+donnees.append(<span class="s">'photos[]'</span>, fichier);
+<span class="k">const</span> reponse = <span class="k">await</span> fetch(url, {
+  method: <span class="s">'POST'</span>,
+  headers: { <span class="s">'X-Api-Key'</span>: <span class="s">'gc_VOTRE_CLE'</span> },
+  body: donnees,
+});
+<span class="k">const</span> { status } = <span class="k">await</span> reponse.json(); <span class="c">// 'pending' ou 'published'</span></code></pre>
+            </div>
+          </div>
+          <div class="code">
+            <div class="code-title">Réponse 201</div>
+<pre><code>{ "status": "pending" }      <span class="c">// proposition en attente de modération</span>
+{ "status": "published" }    <span class="c">// collection sans modération : point modifié</span></code></pre>
+          </div>
+          <div class="code">
+            <div class="code-title">Réponse 422</div>
+<pre><code>{ "error": "Aucune modification." }
+
+{ "error": "Certains champs sont invalides.", "details": { "etat": "Champ obligatoire." } }</code></pre>
+          </div>
+        </div>
+
+        <!-- Lire une image -->
+        <div class="endpoint">
+          <h3 id="ep-fichiers">Lire une image</h3>
+          <p class="route"><span class="method">GET</span> /api/files/{nom}</p>
+          <p>Renvoie une image d'un point. L'URL complète figure dans les propriétés image des points. Aucune clé n'est demandée, même quand les clés sont exigées : le nom de 32 caractères aléatoires n'est pas devinable, et une balise <code>&lt;img&gt;</code> ne peut pas envoyer d'en-tête.</p>
+          <ul>
+            <li>Type : <code>image/jpeg</code>, <code>image/png</code> ou <code>image/webp</code>.</li>
+            <li>Mise en cache d'un an (<code>Cache-Control: public, max-age=31536000, immutable</code>) : une image n'est jamais modifiée, une nouvelle image reçoit un nouveau nom.</li>
+            <li><code>404</code> (« Image introuvable. ») si le nom n'existe pas.</li>
+          </ul>
+          <div class="tabs">
+            <div class="code" data-label="curl">
+              <div class="code-title">curl</div>
+<pre><code>curl -O https://votre-instance.org/api/files/3f2a9c0d41b7e8a65c1d2e3f4a5b6c7d.jpg</code></pre>
+            </div>
+            <div class="code" data-label="JavaScript">
+              <div class="code-title">JavaScript</div>
+<pre><code><span class="k">for</span> (<span class="k">const</span> src <span class="k">of</span> banc.properties.photos ?? []) {
+  <span class="k">const</span> img = document.createElement(<span class="s">'img'</span>);
+  img.src = src;
+  img.alt = <span class="s">''</span>;
+  img.loading = <span class="s">'lazy'</span>;
+  galerie.append(img);
+}</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Configuration du site public -->
+        <div class="endpoint">
+          <h3 id="ep-front">Configuration du site public</h3>
+          <p class="route"><span class="method">GET</span> /api/front</p>
+          <p>Renvoie la configuration du <a href="#site-public">site public</a> : titre, texte d'introduction, collections affichées avec leurs champs et les envois permis, vue de carte par défaut. Le site public lit cette route au chargement. <code>404</code> si le site public est désactivé.</p>
+          <dl class="params">
+            <dt>title</dt>
+            <dd>Titre du site public.</dd>
+            <dt>intro</dt>
+            <dd>Texte d'introduction.</dd>
+            <dt>collections</dt>
+            <dd>Collections affichées, dans l'ordre des réglages, au format de <a href="#ep-collections"><code>GET /api/collections</code></a>, avec les envois permis depuis le site : <code>can_submit</code> (ajouts) et <code>can_edit</code> (propositions de modification). Chacun combine le réglage du site public et celui de la collection.</dd>
+            <dt>center</dt>
+            <dd>Centre de la vue de carte par défaut : <code>[latitude, longitude]</code>.</dd>
+            <dt>zoom</dt>
+            <dd>Niveau de zoom de la vue par défaut (1 à 19).</dd>
+          </dl>
+          <div class="code">
+            <div class="code-title">Réponse 200</div>
+<pre><code>{
+  "title": "Bancs publics",
+  "intro": "Carte des bancs publics. Les ajouts sont publiés après relecture.",
+  "collections": [
+    {
+      "id": "bancs",
+      "name": "Bancs publics",
+      "description": "Bancs installés sur l'espace public, avec leur état.",
+      "public_submission": true,
+      "public_edit": true,
+      "fields": [ … ],
+      "count": 1240,
+      "can_submit": true,
+      "can_edit": true
+    }
+  ],
+  "center": [45.764, 4.8357],
+  "zoom": 15
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <section>
+        <h2 id="leaflet">Exemple : carte Leaflet</h2>
+        <p>Page complète, à placer sur un autre site. Elle affiche les bancs de la zone visible, en rouge quand ils sont cassés, avec une fiche au clic. La clé utilisée est limitée au domaine de ce site (voir <a href="#api-auth">Clés d'API</a>). Le <a href="#site-public">site public</a> intégré couvre le même besoin sans développement.</p>
+        <div class="code">
+          <div class="code-title">carte.html</div>
+<pre><code>&lt;!doctype html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+  &lt;title&gt;Bancs publics&lt;/title&gt;
+  &lt;link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"&gt;
+  &lt;script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"&gt;&lt;/script&gt;
+  &lt;style&gt;
+    html, body, #carte { height: 100%; margin: 0; }
+    .fiche img { display: block; max-width: 220px; margin-top: 6px; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id="carte"&gt;&lt;/div&gt;
+  &lt;script&gt;
+    const API = 'https://votre-instance.org/api';
+    const CLE = 'gc_VOTRE_CLE'; <span class="c">// clé limitée au domaine de ce site</span>
+
+    const carte = L.map('carte').setView([45.764, 4.8357], 15);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© &lt;a href="https://www.openstreetmap.org/copyright"&gt;OpenStreetMap&lt;/a&gt;',
+    }).addTo(carte);
+    const calque = L.layerGroup().addTo(carte);
+
+    <span class="c">// Échappe un texte saisi par le public avant de l'insérer en HTML.</span>
+    const texte = (valeur) =&gt; String(valeur).replace(/[&amp;&lt;&gt;"']/g, (c) =&gt; `&amp;#${c.charCodeAt(0)};`);
+
+    function fiche(feature) {
+      const p = feature.properties;
+      let html = `&lt;div class="fiche"&gt;&lt;strong&gt;Banc n° ${feature.id}&lt;/strong&gt;`;
+      html += `&lt;br&gt;État : ${texte(p.etat ?? 'non renseigné')}`;
+      if (p.places) html += `&lt;br&gt;Places : ${texte(p.places)}`;
+      if (p.dossier !== undefined) html += `&lt;br&gt;Dossier : ${p.dossier ? 'oui' : 'non'}`;
+      for (const src of p.photos ?? []) html += `&lt;img src="${texte(src)}" alt="" loading="lazy"&gt;`;
+      return html + '&lt;/div&gt;';
+    }
+
+    let enCours;
+    async function charger() {
+      enCours?.abort();
+      enCours = new AbortController();
+      const b = carte.getBounds();
+      const bbox = [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()].map((n) =&gt; n.toFixed(5));
+      try {
+        const reponse = await fetch(`${API}/collections/bancs/points?bbox=${bbox.join(',')}`, {
+          headers: { 'X-Api-Key': CLE },
+          signal: enCours.signal,
+        });
+        const donnees = await reponse.json();
+        if (!reponse.ok) throw new Error(donnees.error);
+
+        calque.clearLayers();
+        L.geoJSON(donnees, {
+          pointToLayer: (feature, latlng) =&gt; L.circleMarker(latlng, {
+            radius: 7,
+            weight: 2,
+            color: '#ffffff',
+            fillOpacity: 1,
+            fillColor: feature.properties.etat === 'Cassé' ? '#b42318' : '#0b6b4a',
+          }),
+          onEachFeature: (feature, layer) =&gt; layer.bindPopup(fiche(feature)),
+        }).addTo(calque);
+      } catch (erreur) {
+        if (erreur.name !== 'AbortError') console.error('Chargement impossible :', erreur.message);
+      }
+    }
+
+    carte.on('moveend', charger);
+    charger();
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+        </div>
+        <p>Remarques :</p>
+        <ul>
+          <li>Les textes viennent du public : la fonction <code>texte()</code> les échappe avant leur insertion en HTML. Sans cet échappement, un champ contenant du HTML serait interprété par la page.</li>
+          <li>Le paramètre <code>bbox</code> limite la réponse à la zone affichée. La requête précédente est annulée quand la carte bouge de nouveau.</li>
+          <li>Pour une collection de quelques milliers de points, un seul appel sans <code>bbox</code> au chargement suffit.</li>
+          <li>Les points importés d'OpenStreetMap doivent être attribués : la mention « © OpenStreetMap » du fond de carte couvre les deux.</li>
+        </ul>
+      </section>
+
+      <!-- ============================================================ -->
+      <section>
+        <h2 id="site-public">Site public</h2>
+        <p>Le site public est une interface web facultative, servie à la racine de l'instance (<code>https://votre-instance.org/</code>). Il permet de consulter et d'alimenter les collections sans développer de site. Il est désactivé par défaut ; la racine renvoie alors vers le back-office.</p>
+        <p>Il utilise l'API publique de l'instance et sa route <a href="#ep-front"><code>GET /api/front</code></a>. Son style est volontairement neutre (polices du système, gris et une couleur d'accent) et il est utilisable sur téléphone.</p>
+
+        <h3 id="site-public-reglages">Réglages</h3>
+        <p>Les réglages se font dans le back-office, page <strong>Site public</strong>, réservée aux comptes admin.</p>
+        <dl class="params">
+          <dt>Activation</dt>
+          <dd>Active ou désactive le site public. Désactivé, la racine renvoie vers <code>/admin/</code> et <code>GET /api/front</code> répond <code>404</code>.</dd>
+          <dt>Titre</dt>
+          <dd>Titre affiché en tête du site et dans l'onglet du navigateur.</dd>
+          <dt>Introduction</dt>
+          <dd>Texte affiché sous le titre.</dd>
+          <dt>Collections</dt>
+          <dd>Collections affichées sur le site. Les autres collections n'y apparaissent pas.</dd>
+          <dt>Ajouts</dt>
+          <dd>Autorise l'ajout de points depuis le site.</dd>
+          <dt>Modifications</dt>
+          <dd>Autorise les propositions de modification depuis le site.</dd>
+          <dt>Vue de carte</dt>
+          <dd>Centre et zoom de la carte à l'ouverture du site. Le bouton prévu reprend la vue courante de la carte du back-office.</dd>
+        </dl>
+
+        <h3 id="site-public-contenu">Pages et formulaires</h3>
+        <ul>
+          <li><strong>Carte</strong> : les points publiés de la collection choisie, sur un fond OpenStreetMap. Le titre, l'introduction et la description de la collection sont affichés à côté.</li>
+          <li><strong>Fiche d'un point</strong> : ouverte par un clic sur le point. Elle affiche les champs renseignés, les images, les liens vers les points désignés par ses champs <code>ref</code> et la liste des points qui le désignent.</li>
+          <li><strong>Formulaire d'ajout</strong> : généré à partir du schéma de la collection (types, choix, champs obligatoires, images). La position du point se place d'un clic sur la carte.</li>
+          <li><strong>Formulaire de proposition de modification</strong> : ouvert depuis la fiche d'un point, avec un commentaire facultatif destiné à la modération.</li>
+        </ul>
+
+        <h3 id="site-public-envois">Ajouts et propositions</h3>
+        <p>Les envois du site public passent par l'API publique et suivent les mêmes règles qu'un envoi d'une autre provenance :</p>
+        <ul>
+          <li>un ajout demande que les ajouts soient autorisés dans les réglages du site et que l'option <code>public_submission</code> de la collection vaille <code>true</code> ;</li>
+          <li>une proposition de modification demande que les modifications soient autorisées dans les réglages du site et que l'option <code>public_edit</code> de la collection vaille <code>true</code> ;</li>
+          <li>dans une collection avec modération, l'ajout ou la proposition attend une validation dans le back-office ;</li>
+          <li>les <a href="#api-limites">limites de débit</a> et le <a href="#ep-soumettre">champ piège</a> s'appliquent.</li>
+        </ul>
+
+        <h3 id="site-public-cles">Clés d'API et site public</h3>
+        <p>Quand <code>'api_key' =&gt; true</code>, le site public fonctionne sans clé : les requêtes envoyées depuis les pages de l'instance elle-même (même domaine, d'après l'en-tête <code>Origin</code> ou à défaut <code>Referer</code>) sont acceptées tant que le site public est activé.</p>
+        <div class="warn">
+          <strong>Conséquence</strong>
+          <p>Cette vérification repose sur les mêmes en-têtes que les <a href="#api-auth">clés limitées à des domaines</a>. Un programme exécuté hors d'un navigateur peut les fixer : quand le site public est activé, l'API de l'instance est donc accessible sans clé à un tel programme. Les limites de débit, le champ piège et la modération restent appliqués.</p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <section>
+        <h2 id="back-office">Back-office</h2>
+        <p>Le back-office est à <code>https://votre-instance.org/admin/</code>. Il affiche une carte OpenStreetMap en fond et les panneaux de travail par-dessus.</p>
+        <p>La navigation compte les pages <strong>Modération</strong>, <strong>Modifications</strong> et <strong>Points</strong>, et, pour les comptes admin, <strong>Collections</strong>, <strong>Membres</strong>, <strong>Clés d'API</strong>, <strong>Site public</strong> et <strong>Journal</strong>. La page <strong>Mon compte</strong> s'ouvre par le nom du membre, en haut de page. Un champ de recherche de lieux, qui interroge le service Nominatim d'OpenStreetMap, déplace la carte.</p>
+
+        <h3 id="roles">Rôles</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Rôle</th><th>Droits</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Modération</strong></td><td>Valider, refuser, ajouter, modifier et supprimer des points ; appliquer ou refuser les propositions de modification.</td></tr>
+              <tr><td><strong>Admin</strong></td><td>Droits de la modération, plus : gestion des membres et des invitations, des collections, des clés d'API et des réglages du site public ; règle de double authentification de l'instance et réinitialisation de celle d'un membre ; consultation du journal.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Chaque membre dispose d'une page <a href="#mon-compte"><strong>Mon compte</strong></a> (double authentification et codes de secours).</p>
+
+        <h3 id="invitations">Invitations</h3>
+        <p>geocrowd n'envoie pas les invitations par e-mail. L'ajout d'un membre se fait par lien d'invitation :</p>
+        <ol>
+          <li>Un compte admin ouvre la page <strong>Membres</strong>, saisit l'adresse de la personne et son rôle, et obtient un lien d'invitation.</li>
+          <li>Le lien est transmis à la personne par un autre canal (messagerie, e-mail, en personne).</li>
+          <li>La personne ouvre le lien et choisit son nom et son mot de passe (10 caractères au moins). Si la <a href="#regle-2fa">règle de l'instance</a> l'impose à son rôle, elle configure ensuite la <a href="#totp-activation">double authentification</a> ; sinon, elle est connectée directement.</li>
+        </ol>
+        <p>Le lien est valable <code>invitation_days</code> jours (7 par défaut). Une invitation en attente peut être annulée. Depuis la même page, un compte admin change le rôle d'un membre ou lui retire l'accès (sauf à son propre compte).</p>
+
+        <h3 id="membres">Membres</h3>
+        <p>La page <strong>Membres</strong>, réservée aux comptes admin, liste les membres (rôle, double authentification, dernière connexion), puis les invitations en cours. La colonne <strong>Double authentification</strong> indique :</p>
+        <dl class="params">
+          <dt>Application</dt>
+          <dd>Double authentification activée, par application d'authentification.</dd>
+          <dt>E-mail</dt>
+          <dd>Double authentification activée, par code envoyé par e-mail.</dd>
+          <dt>Désactivée</dt>
+          <dd>Connexion par mot de passe seul, permise par la règle de l'instance.</dd>
+          <dt>À configurer</dt>
+          <dd>La règle de l'instance impose la double authentification à ce membre, qui ne l'a pas encore : il la configure à sa connexion suivante.</dd>
+        </dl>
+        <p>Pour un autre membre dont la double authentification est activée, <strong>Réinitialiser la double auth.</strong> la désactive et supprime ses codes de secours, après confirmation (voir <a href="#recuperation">Second facteur perdu</a>).</p>
+        <p>Le panneau <strong>Double authentification</strong> de la page regroupe :</p>
+        <ul>
+          <li>la <strong>règle</strong> de l'instance : « Facultative : chaque membre choisit », « Obligatoire pour les comptes admin » ou « Obligatoire pour tous les membres », appliquée par <strong>Enregistrer</strong> (voir <a href="#regle-2fa">Règle de l'instance</a>) ;</li>
+          <li>le mode d'envoi des e-mails : serveur SMTP, fonction <code>mail()</code> de PHP, ou envoi non configuré, auquel cas seule l'application d'authentification est proposée aux membres (voir <a href="#envoi-emails">Envoi d'e-mails</a>) ;</li>
+          <li><strong>Envoyer un e-mail de test</strong>, présent quand l'envoi est configuré : un e-mail est envoyé à l'adresse du compte admin connecté, et l'erreur éventuelle s'affiche dans le panneau.</li>
+        </ul>
+
+        <h3 id="mon-compte">Mon compte</h3>
+        <p>La page <strong>Mon compte</strong> affiche le nom, l'adresse et le rôle du membre connecté, et l'état de sa double authentification : méthode utilisée et, le cas échéant, « Obligatoire pour votre compte ». Elle propose :</p>
+        <ul>
+          <li><strong>Activer avec une application</strong> et <strong>Activer par e-mail</strong> (ce dernier seulement si l'envoi d'e-mails est configuré) ; une fois la double authentification activée, <strong>Passer à une application</strong> ou <strong>Passer au code par e-mail</strong> (voir <a href="#totp-activation">Activation</a>) ;</li>
+          <li><strong>Désactiver</strong>, absent quand la règle de l'instance impose la double authentification au membre (voir <a href="#desactivation-2fa">Désactivation</a>) ;</li>
+          <li>dans la partie <strong>Codes de secours</strong>, le nombre de codes restants et <strong>Générer de nouveaux codes</strong> (voir <a href="#codes-de-secours">Codes de secours</a>).</li>
+        </ul>
+        <p>La désactivation et la génération de nouveaux codes de secours demandent le mot de passe du compte.</p>
+
+        <h3 id="moderation">Modération</h3>
+        <p>La page <strong>Modération</strong> liste les points en attente ; leur nombre figure dans le menu. Pour chaque point, la page affiche sa position sur la carte et ses champs, et propose les actions suivantes :</p>
+        <ul>
+          <li><strong>valider</strong> : le point est publié et apparaît dans l'API et sur le site public ;</li>
+          <li><strong>refuser</strong> : le point reste dans la base, invisible pour l'API, et peut être publié plus tard ;</li>
+          <li><strong>modifier</strong> avant décision : déplacer le point, corriger un champ, retirer une image ;</li>
+          <li><strong>supprimer</strong> : le point et ses images sont effacés définitivement.</li>
+        </ul>
+        <p>La page <strong>Points</strong> liste tous les points par statut (publiés, en attente, refusés). Les membres peuvent y ajouter un point, publié directement.</p>
+
+        <h3 id="modifications">Modifications</h3>
+        <p>La page <strong>Modifications</strong> liste les <a href="#ep-modifier">propositions de modification</a> en attente. Pour chacune :</p>
+        <ul>
+          <li>la valeur actuelle et la valeur proposée de chaque champ modifié ;</li>
+          <li>l'ancienne et la nouvelle position sur la carte, si le point est déplacé ;</li>
+          <li>le commentaire joint à la proposition.</li>
+        </ul>
+        <p><strong>Appliquer</strong> met à jour le point publié. <strong>Refuser</strong> écarte la proposition sans modifier le point. Dans une collection sans modération, les propositions sont appliquées directement et n'apparaissent pas dans cette page.</p>
+
+        <h3 id="editeur-schema">Éditeur de schéma</h3>
+        <p>La page <strong>Collections</strong>, réservée aux comptes admin, liste les collections avec leur nombre de champs, de points publiés et en attente, et leurs règles d'envoi. <strong>Nouvelle collection</strong> ouvre l'éditeur ; un clic sur une collection l'ouvre en modification. À côté du formulaire, un aperçu affiche la <a href="#collections-format">définition JSON</a> renvoyée par l'API.</p>
+
+        <h4>La collection</h4>
+        <ul>
+          <li><strong>Nom</strong> : nom affiché, 100 caractères au plus.</li>
+          <li><strong>Identifiant</strong> : généré à partir du nom (« Bancs publics » donne <code>bancs-publics</code>), modifiable avant la création. Il sert dans les URL de l'API : lettres minuscules, chiffres, <code>-</code> et <code>_</code>, 50 caractères au plus ; <code>new</code> est réservé. Il ne change plus après la création.</li>
+          <li><strong>Description</strong> : facultative, 1000 caractères au plus, affichée sur le site public (option <code>description</code>).</li>
+          <li><strong>Modération</strong> : les envois du public attendent une validation avant publication (option <code>moderation</code>).</li>
+          <li><strong>Soumission publique</strong> : l'API et le site public acceptent de nouveaux points (<code>public_submission</code>).</li>
+          <li><strong>Modification publique</strong> : l'API et le site public acceptent des propositions de modification des points publiés (<code>public_edit</code>).</li>
+        </ul>
+
+        <h4>Les champs</h4>
+        <p>Un champ s'ajoute en choisissant son type, puis <strong>Ajouter un champ</strong>. Pour chaque champ :</p>
+        <ul>
+          <li><strong>Libellé</strong> : texte affiché, 100 caractères au plus.</li>
+          <li><strong>Nom technique</strong> : clé du champ dans les données et l'API, généré à partir du libellé (« Places assises » donne <code>places_assises</code>). Lettres minuscules, chiffres et <code>_</code>, commençant par une lettre, 50 caractères au plus ; <code>created_at</code> est réservé.</li>
+          <li><strong>Type</strong> : Texte court, Texte long, Nombre, Choix unique, Choix multiples, Oui / non, Date, Adresse web, Images ou Lien vers un point (voir <a href="#types-de-champs">Types de champs</a>).</li>
+          <li><strong>Obligatoire</strong>, sauf pour un champ Oui / non.</li>
+          <li>Les options du type : longueur maximale, minimum et maximum, choix proposés (un par ligne), nombre et taille maximale des images, collection des points désignés.</li>
+        </ul>
+        <p>Les flèches ↑ et ↓ changent l'ordre des champs, qui est l'ordre d'affichage. La croix retire un champ. Un champ Lien vers un point peut désigner la collection elle-même, y compris pendant sa création.</p>
+        <p>Limites : 100 champs par collection ; 200 choix de 200 caractères au plus ; longueur maximale de 1 à 10 000 caractères ; de 1 à 10 images, de 1 à 20 Mo chacune. Les erreurs s'affichent à côté du champ concerné à l'enregistrement.</p>
+
+        <h4>Modification d'une collection qui a des points</h4>
+        <ul>
+          <li>Le nom technique et le type d'un champ enregistré ne changent plus. Son libellé, ses options et sa position restent modifiables. Pour changer de type, il faut retirer le champ et en créer un autre.</li>
+          <li>Chaque champ enregistré indique le nombre de points où il est renseigné.</li>
+          <li>Retirer un champ efface ses valeurs de tous les points de la collection et des propositions de modification en attente, images comprises. À l'enregistrement, le back-office indique le nombre de points concernés et demande une confirmation.</li>
+          <li>Une règle plus stricte (champ rendu obligatoire, choix retiré) ne modifie pas les points existants : elle s'applique aux envois et modifications suivants.</li>
+        </ul>
+
+        <h4>Suppression d'une collection</h4>
+        <p><strong>Supprimer la collection</strong> efface ses points, leurs images et les propositions de modification en attente, après confirmation. La suppression est définitive. Elle est impossible tant qu'un champ Lien vers un point d'une autre collection désigne cette collection.</p>
+
+        <h3 id="cles-api">Clés d'API</h3>
+        <p>La page <strong>Clés d'API</strong>, réservée aux comptes admin, sert quand <code>'api_key' =&gt; true</code> (voir <a href="#api-auth">Authentification</a>).</p>
+        <ol>
+          <li>Saisir un nom pour la clé (« Carte du site ») et, pour un usage dans une page web, la liste des domaines autorisés, un par ligne : <code>exemple.org</code>, <code>*.exemple.org</code> pour les sous-domaines, <code>localhost</code> pour le développement.</li>
+          <li>Copier la clé affichée, de la forme <code>gc_…</code>. <strong>Elle n'est affichée qu'une fois</strong> : seul un hachage est conservé.</li>
+        </ol>
+        <p>La liste indique, pour chaque clé, ses domaines et sa date de dernière utilisation. <strong>Révoquer</strong> rend une clé inutilisable immédiatement ; les requêtes qui l'utilisent reçoivent alors une erreur <code>401</code>.</p>
+        <p>Le site public de l'instance n'a pas besoin de clé (voir <a href="#site-public-cles">Clés d'API et site public</a>).</p>
+
+        <h3 id="journal">Journal</h3>
+        <p>La page <strong>Journal</strong>, réservée aux comptes admin, liste les tentatives de connexion et les actions faites dans le back-office, de la plus récente à la plus ancienne, par pages de 50. Chaque entrée indique la date, le membre, l'action, son objet (adresse d'un membre, identifiant d'une collection, numéro d'un point, nom d'une clé) et, selon l'action, des détails : changement de statut, rôle, champs retirés, méthode ou règle de double authentification.</p>
+        <dl class="params">
+          <dt>Connexions</dt>
+          <dd>Connexions réussies, mots de passe refusés (sans membre, avec l'adresse saisie), codes de double authentification refusés, création du premier compte, double authentification activée (avec la méthode : application ou e-mail) ou désactivée depuis Mon compte, nouveaux codes de secours.</dd>
+          <dt>Modération</dt>
+          <dd>Points ajoutés, modifiés, changés de statut ou supprimés.</dd>
+          <dt>Propositions</dt>
+          <dd>Propositions de modification appliquées ou refusées.</dd>
+          <dt>Collections</dt>
+          <dd>Créations, modifications (avec les champs retirés) et suppressions.</dd>
+          <dt>Membres et invitations</dt>
+          <dd>Invitations créées, annulées ou acceptées, rôles modifiés, membres retirés, doubles authentifications réinitialisées depuis la page Membres, règle de double authentification modifiée (avec la nouvelle règle), e-mails de test envoyés.</dd>
+          <dt>Clés d'API</dt>
+          <dd>Créations (avec les premiers caractères de la clé) et révocations.</dd>
+          <dt>Site public</dt>
+          <dd>Modifications des réglages, avec l'état activé ou désactivé.</dd>
+        </dl>
+        <p>Les entrées sont conservées un an, puis supprimées automatiquement. Le journal ne contient pas d'adresse IP. Les scripts de <code>bin/</code>, dont <code>reset-2fa.php</code>, n'y écrivent pas.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <section>
+        <h2 id="double-authentification">Double authentification</h2>
+        <p>La double authentification ajoute au mot de passe un code à 6 chiffres, demandé à chaque connexion au back-office. Elle est facultative par défaut ; une règle de l'instance peut l'imposer aux comptes admin ou à tous les membres. Deux méthodes sont proposées : une application d'authentification, ou un code envoyé par e-mail.</p>
+
+        <h3 id="regle-2fa">Règle de l'instance</h3>
+        <p>La règle se choisit dans le panneau <strong>Double authentification</strong> de la page <a href="#membres"><strong>Membres</strong></a> (comptes admin) :</p>
+        <dl class="params">
+          <dt>Facultative</dt>
+          <dd>Par défaut. Chaque membre active ou non la double authentification depuis <strong>Mon compte</strong>.</dd>
+          <dt>Obligatoire pour les comptes admin</dt>
+          <dd>Les comptes admin doivent l'avoir ; elle reste facultative pour la modération.</dd>
+          <dt>Obligatoire pour tous</dt>
+          <dd>Tous les membres doivent l'avoir.</dd>
+        </dl>
+        <p>Un membre concerné qui n'a pas de double authentification la configure à sa connexion suivante, juste après son mot de passe, avant d'accéder au back-office. Un membre déjà connecté qui devient concerné (règle modifiée, passage au rôle admin) est déconnecté à sa requête suivante. Un membre concerné ne peut pas désactiver sa double authentification.</p>
+        <p>Un compte admin ne peut pas imposer une règle qu'il ne respecte pas lui-même : il active d'abord sa propre double authentification dans <strong>Mon compte</strong>.</p>
+
+        <h3 id="methodes-2fa">Méthodes</h3>
+        <dl class="params">
+          <dt>Application</dt>
+          <dd>Méthode recommandée. Le code est affiché par une application d'authentification compatible TOTP : Aegis, FreeOTP, Google Authenticator, Microsoft Authenticator, 1Password, Bitwarden, KeePassXC, etc. Elle fonctionne sans réseau et ne dépend pas de la sécurité d'une boîte mail.</dd>
+          <dt>E-mail</dt>
+          <dd>Le code est envoyé à l'adresse du compte à chaque connexion. Il est valable 10 minutes. Cette méthode n'est proposée que si l'<a href="#envoi-emails">envoi d'e-mails</a> est configuré. Elle est moins sûre : elle vaut ce que vaut la sécurité de la boîte mail.</dd>
+        </dl>
+        <div class="note">
+          <strong>Application : ni e-mail, ni SMS</strong>
+          <p>Avec une application, le code est calculé à partir d'un secret partagé à l'activation et de l'heure courante (norme <a href="https://datatracker.ietf.org/doc/html/rfc6238">RFC 6238</a>). Le serveur n'envoie aucun message. L'horloge du serveur doit être à l'heure, avec une tolérance de 30 secondes.</p>
+        </div>
+
+        <h3 id="totp-activation">Activation</h3>
+        <p>La double authentification s'active depuis la page <a href="#mon-compte"><strong>Mon compte</strong></a>, ou à la connexion quand la règle de l'instance l'impose au membre. À la connexion, le choix entre les deux méthodes n'est proposé que si l'envoi d'e-mails est configuré ; sinon, l'application est demandée directement.</p>
+        <p>Avec une application :</p>
+        <ol>
+          <li>Le back-office affiche un QR code et la clé correspondante, pour une saisie manuelle.</li>
+          <li>L'application scanne le QR code et affiche un code renouvelé toutes les 30 secondes.</li>
+          <li>La saisie de ce code confirme l'activation.</li>
+        </ol>
+        <p>Par e-mail :</p>
+        <ol>
+          <li><strong>Envoyer le code</strong> envoie un code à l'adresse du compte, pour vérifier qu'elle reçoit les messages de geocrowd.</li>
+          <li>La saisie du code reçu, puis <strong>Activer</strong>, confirme l'activation. <strong>Renvoyer le code</strong> en demande un nouveau.</li>
+        </ol>
+        <p>Le back-office affiche alors <strong>10 codes de secours</strong>, une seule fois. Ils sont à conserver hors du second facteur (gestionnaire de mots de passe, papier).</p>
+        <p>Dans <strong>Mon compte</strong>, <strong>Passer à une application</strong> ou <strong>Passer au code par e-mail</strong> change de méthode, avec les mêmes étapes. La nouvelle méthode remplace l'ancienne, et une nouvelle série de codes de secours remplace la précédente.</p>
+
+        <h3 id="connexion-2fa">Connexion</h3>
+        <p>Après le mot de passe, le back-office demande le code de la méthode du membre, ou l'un de ses codes de secours. Cette étape doit être terminée dans les 10 minutes.</p>
+        <ul>
+          <li><strong>Application</strong> : le code affiché par l'application au moment de la saisie.</li>
+          <li><strong>E-mail</strong> : un code est envoyé dès la validation du mot de passe, à l'adresse du compte, indiquée en partie à l'écran. <strong>Renvoyer le code par e-mail</strong> en envoie un nouveau ; seul le dernier code envoyé est valable. Un nouvel envoi est possible au plus une fois par minute, et 5 envois au plus par heure et par compte. Si l'envoi échoue, le message d'erreur s'affiche et un code de secours reste utilisable.</li>
+        </ul>
+        <div class="warn">
+          <strong>Envoi d'e-mails désactivé ou en panne</strong>
+          <p>Les membres qui utilisent la méthode par e-mail ne reçoivent plus de code : ils se connectent avec un code de secours, ou un compte admin réinitialise leur double authentification depuis la page <strong>Membres</strong> (voir <a href="#recuperation">Second facteur perdu</a>).</p>
+        </div>
+
+        <h3 id="desactivation-2fa">Désactivation</h3>
+        <p><strong>Désactiver</strong>, dans <strong>Mon compte</strong>, demande le mot de passe du compte. La connexion ne demande ensuite plus que le mot de passe, et les codes de secours sont supprimés. Ce bouton est absent quand la règle de l'instance impose la double authentification au membre.</p>
+
+        <h3 id="codes-de-secours">Codes de secours</h3>
+        <p>Un code de secours remplace une fois le code de l'application ou de l'e-mail, quelle que soit la méthode. La page <strong>Mon compte</strong> indique le nombre de codes restants et permet d'en générer une nouvelle série, sur présentation du mot de passe du compte ; les anciens codes sont alors invalidés.</p>
+
+        <h3 id="recuperation">Second facteur perdu</h3>
+        <p>Pour un téléphone perdu ou changé, ou une boîte mail inaccessible, trois solutions, dans cet ordre :</p>
+        <ol>
+          <li><strong>Un code de secours.</strong> Après connexion, de nouveaux codes se génèrent dans Mon compte, où la méthode peut aussi être changée. Pour un changement de téléphone : transfert des comptes avec la fonction d'export de l'application, ou nouvelle configuration (désactivation puis activation dans Mon compte quand la règle le permet, ou réinitialisation par un compte admin, point suivant).</li>
+          <li><strong>Un compte admin.</strong> Depuis la page <strong>Membres</strong>, il réinitialise la double authentification d'un autre membre : elle est désactivée et ses codes de secours sont supprimés. Si la règle de l'instance l'impose au membre, il la configure de nouveau à sa connexion suivante ; sinon, il se connecte avec son seul mot de passe et peut la réactiver dans Mon compte.</li>
+          <li><strong>L'accès aux fichiers</strong>, si aucun compte admin ne peut se connecter. Avec un accès SSH à l'hébergement :
+<pre><code>php bin/reset-2fa.php adresse@exemple.org</code></pre>
+            <p>Sans SSH (hébergement mutualisé avec FTP seul), sur une copie locale de geocrowd avec PHP :</p>
+            <ol>
+              <li>télécharger <code>data/geocrowd.sqlite</code>, ainsi que <code>geocrowd.sqlite-wal</code> et <code>geocrowd.sqlite-shm</code> s'ils existent, dans un même dossier ;</li>
+              <li>lancer <code>php bin/reset-2fa.php adresse@exemple.org --db=chemin/vers/geocrowd.sqlite</code> ;</li>
+              <li>renvoyer <code>geocrowd.sqlite</code> sur le serveur, puis y supprimer <code>geocrowd.sqlite-wal</code> et <code>geocrowd.sqlite-shm</code> s'ils sont présents.</li>
+            </ol>
+            <p>Les données enregistrées sur le serveur pendant l'opération sont perdues. Le script a le même effet que la réinitialisation depuis la page Membres.</p>
+            <p>Le script n'utilise pas la clé de <a href="#chiffrement-secrets">chiffrement des secrets</a> : il efface la méthode, le secret éventuel et les codes de secours du membre visé, sans toucher aux secrets chiffrés des autres membres. Il fonctionne donc sur une copie locale qui n'a pas le fichier <code>secret.php</code> du serveur ; seul <code>geocrowd.sqlite</code> est renvoyé, et le <code>secret.php</code> du serveur reste en place.</p>
+          </li>
+        </ol>
+
+        <h3 id="tentatives">Tentatives limitées</h3>
+        <ul>
+          <li>10 mots de passe erronés par adresse IP (bloc /64 en IPv6) en 15 minutes, mot de passe redemandé dans Mon compte compris.</li>
+          <li>5 codes erronés par compte en 15 minutes, toutes méthodes confondues.</li>
+          <li>Un code de l'application déjà utilisé est refusé, même dans sa fenêtre de 30 secondes. Un code reçu par e-mail ne sert qu'une fois.</li>
+          <li>Codes par e-mail : un envoi par minute au plus, 5 envois par heure et par compte.</li>
+        </ul>
+        <p>Une fois la limite atteinte, les tentatives sont refusées jusqu'à la fin de la période. Les mots de passe et les codes refusés figurent dans le <a href="#journal">journal</a>.</p>
+
+        <h3 id="chiffrement-secrets">Chiffrement des secrets</h3>
+        <p>Cette partie ne concerne que la méthode par application ; la méthode par e-mail n'enregistre pas de secret. Le secret partagé de chaque membre est chiffré en base (AES-256-GCM). La clé de chiffrement est dans le fichier <code>secret.php</code> du dossier de données (<code>data/secret.php</code> par défaut), créé automatiquement par geocrowd au premier besoin, avec des droits réservés à son propriétaire. Demandé depuis le web, ce fichier PHP s'exécute sans rien afficher. Une base copiée seule, par exemple téléchargée par erreur, ne permet donc pas de générer les codes.</p>
+        <p>Les secrets enregistrés en clair par une version antérieure sont chiffrés automatiquement à la première requête web qui suit la mise à jour (voir <a href="#mise-a-jour">Mise à jour et sauvegarde</a>).</p>
+        <div class="warn">
+          <strong>Perte de secret.php</strong>
+          <p>Le fichier <code>secret.php</code> se sauvegarde avec la base. S'il est perdu ou remplacé, les secrets enregistrés sont illisibles. Les codes de secours, stockés à part, restent acceptés ; un code de l'application est refusé avec le message « Double authentification illisible : la clé de chiffrement (secret.php) a été perdue ou remplacée. Utilisez un code de secours, ou demandez à un compte admin de la réinitialiser (page Membres ou bin/reset-2fa.php). » Les membres qui utilisent la méthode par e-mail ne sont pas concernés.</p>
+          <p>La double authentification de chaque membre qui utilise une application doit alors être reconfigurée : un compte admin, connecté avec un code de secours, la réinitialise depuis la page <strong>Membres</strong>. Si aucun compte admin ne peut plus se connecter, <code>bin/reset-2fa.php</code> réinitialise d'abord un compte admin (voir <a href="#recuperation">Second facteur perdu</a>), qui réinitialise ensuite les autres membres.</p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <section>
+        <h2 id="osm">Import OpenStreetMap</h2>
+        <p>Le script <code>bin/import-osm.php</code> importe des objets <a href="https://www.openstreetmap.org/">OpenStreetMap</a> comme points publiés d'une collection existante. Un fichier JSON décrit l'import : la collection visée, la zone, la requête <a href="https://wiki.openstreetmap.org/wiki/Overpass_API">Overpass</a> et la correspondance entre tags OSM et champs.</p>
+        <div class="code">
+          <div class="code-title">bancs.json</div>
+<pre><code>{
+  "collection": "bancs",
+  "area": "FR",
+  "query": "node[amenity=bench](area.zone);",
+  "fields": {
+    "etat": { "value": "Bon" },
+    "dossier": { "tag": "backrest", "map": { "yes": true, "no": false } }
+  }
+}</code></pre>
+        </div>
+        <dl class="params">
+          <dt>collection</dt>
+          <dd>Identifiant de la collection à remplir.</dd>
+          <dt>area</dt>
+          <dd>Code pays ISO 3166-1 (<code>FR</code>, <code>BE</code>, <code>CH</code>…). La requête le reçoit sous le nom <code>area.zone</code>.</dd>
+          <dt>query</dt>
+          <dd>Requête Overpass. Les nœuds, chemins et relations sont acceptés (<code>nwr</code>) ; pour les chemins et relations, le centre sert de position.</dd>
+          <dt>fields</dt>
+          <dd>Pour chaque champ de la collection, la source de sa valeur :
+            <ul>
+              <li><code>value</code> : valeur fixe ;</li>
+              <li><code>tag</code> : valeur du tag OSM, telle quelle ;</li>
+              <li><code>tag</code> + <code>map</code> : valeur du tag traduite par la table ; une valeur absente de la table donne <code>default</code> ;</li>
+              <li><code>default</code> : valeur quand le tag est absent ou non traduit ;</li>
+              <li><code>angle: true</code> : le tag est un angle en degrés, comme <code>direction</code> (numérique, ou traduit par <code>map</code> pour les points cardinaux : <code>{"N": 0, "E": 90, …}</code>), arrondi et ramené entre 0 et 359. Les valeurs non numériques (<code>both</code>, <code>0-359</code>) sont ignorées.</li>
+            </ul>
+          </dd>
+        </dl>
+        <p>Dans l'exemple, chaque banc importé est noté en bon état, et le tag <code>backrest</code> devient le champ Oui / non <code>dossier</code> ; un banc sans ce tag n'a pas de valeur. Les valeurs importées ne passent pas par la validation de la collection : elles doivent faire partie des choix des champs à choix et avoir le bon type (<code>true</code> et non <code>"yes"</code>).</p>
+<pre><code>php bin/import-osm.php bancs.json --dry-run              <span class="c"># compte sans rien écrire</span>
+php bin/import-osm.php bancs.json                        <span class="c"># importe</span>
+php bin/import-osm.php bancs.json --file=reponse.json    <span class="c"># réponse Overpass enregistrée</span></code></pre>
+        <ul>
+          <li><strong>À chaque nouvelle exécution</strong>, le script met à jour les points déjà importés (position et champs issus d'OSM) sans changer leur statut ni les champs absents de <code>fields</code> : un point refusé reste refusé, une image ajoutée par le public est conservée. Les champs de <code>fields</code> reprennent la valeur issue d'OSM, valeurs fixes comprises.</li>
+          <li>Les points saisis manuellement ne sont pas modifiés.</li>
+          <li><code>--file=reponse.json</code> importe une réponse Overpass enregistrée, quand le serveur ne peut pas joindre Overpass (connexions sortantes bloquées chez certains hébergeurs mutualisés).</li>
+          <li>Sans accès en ligne de commande sur l'hébergement, l'import se fait sur une copie locale, puis la base est renvoyée sur le serveur, avec les précautions décrites pour <a href="#recuperation">la réinitialisation de la double authentification</a>.</li>
+        </ul>
+        <div class="note">
+          <strong>Licence des données</strong>
+          <p>Les données OpenStreetMap sont sous licence <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>. La source doit être citée là où les points sont affichés (« © OpenStreetMap », avec un lien vers <a href="https://www.openstreetmap.org/copyright">openstreetmap.org/copyright</a>), et la base qui les contient diffusée sous la même licence.</p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <section>
+        <h2 id="securite">Sécurité et vie privée</h2>
+        <p>geocrowd conserve le minimum de données sur les personnes qui envoient des points.</p>
+
+        <h4>Données conservées pour une soumission</h4>
+        <ul>
+          <li>La position, les champs déclarés dans la collection, les images réencodées et la date.</li>
+          <li>Ni nom, ni adresse e-mail, ni compte : l'envoi est anonyme.</li>
+          <li>Les adresses IP ne sont pas stockées en clair. Pour les limites de débit, seul un hachage de l'adresse, ou de son bloc /64 en IPv6 (SHA-256 avec un sel aléatoire propre à l'instance), est conservé, puis supprimé au bout d'une heure, à la première requête soumise à une limite.</li>
+        </ul>
+
+        <h4>Images</h4>
+        <ul>
+          <li>Réencodées à l'enregistrement : métadonnées EXIF supprimées, dont la géolocalisation de l'appareil, la date de prise de vue et le modèle du téléphone.</li>
+          <li>Format vérifié sur le contenu du fichier, pas sur son extension. Seuls JPEG, PNG et WebP sont acceptés.</li>
+          <li>Noms aléatoires de 32 caractères, servis avec <code>X-Content-Type-Options: nosniff</code>.</li>
+          <li>Une image peut montrer un visage ou une plaque d'immatriculation : la modération peut la refuser ou la retirer.</li>
+        </ul>
+
+        <h4>Protection contre les abus</h4>
+        <ul>
+          <li><a href="#api-limites">Limites de débit</a>, site public compris : soumissions et propositions par adresse IP (bloc /64 en IPv6) et pour l'ensemble des visiteurs, taille de la file de modération, place des images, lectures de listes de points par adresse IP.</li>
+          <li>Champ piège <code>website</code> : un envoi qui le remplit reçoit une réponse positive, sans enregistrement.</li>
+          <li>Validation de chaque champ ; propriétés non déclarées ignorées ; un champ <code>ref</code> doit désigner un point publié.</li>
+          <li>Champs Adresse web limités aux adresses <code>http</code> et <code>https</code> : une adresse <code>javascript:</code> ou <code>data:</code> est refusée.</li>
+          <li>Corps JSON limité à 64 Ko.</li>
+          <li>Modération activée par défaut.</li>
+          <li>Clés d'API limitées à des domaines, en option.</li>
+        </ul>
+
+        <h4>Back-office</h4>
+        <ul>
+          <li>Double authentification par application ou par e-mail, facultative ou imposée aux comptes admin ou à tous selon la <a href="#regle-2fa">règle de l'instance</a> ; tentatives limitées. Secrets des applications d'authentification chiffrés en base, avec une clé gardée dans un fichier à part (voir <a href="#chiffrement-secrets">Chiffrement des secrets</a>). Codes envoyés par e-mail conservés uniquement sous forme de hachage, dans la session, 10 minutes au plus.</li>
+          <li>Mot de passe redemandé pour désactiver la double authentification et pour générer de nouveaux codes de secours.</li>
+          <li>Mots de passe de 10 caractères au moins, hachés avec l'algorithme par défaut de PHP (bcrypt).</li>
+          <li>Cookie de session <code>HttpOnly</code>, <code>SameSite=Strict</code>, et <code>Secure</code> en HTTPS. Jeton anti-CSRF exigé pour toute action.</li>
+          <li>Liens d'invitation et clés d'API stockés uniquement sous forme de hachage.</li>
+          <li>Seuls les comptes admin modifient les collections et les réglages du site public ; chaque définition est validée par le serveur avant enregistrement.</li>
+          <li>Connexions réussies et refusées, codes refusés et actions du back-office consignés pendant un an dans le <a href="#journal">journal</a>, consultable par les comptes admin.</li>
+        </ul>
+
+        <h4>Ressources tierces</h4>
+        <ul>
+          <li>Leaflet, le générateur de QR code (qrcode-generator) et les polices Geist sont fournis dans le dossier <code>vendor/</code>, avec leurs licences : le back-office et le site public ne chargent aucun script, aucune feuille de style ni aucune police depuis un autre serveur.</li>
+          <li>Seuls services tiers : les fonds de carte (<code>tile.openstreetmap.org</code>), dans le back-office et sur le site public, et la recherche de lieux du back-office (<code>nominatim.openstreetmap.org</code>). Ces services reçoivent l'adresse IP des personnes qui consultent ces pages.</li>
+          <li>S'y ajoute, si l'<a href="#envoi-emails">envoi d'e-mails</a> est configuré, le serveur SMTP indiqué dans <code>config.php</code> ou, sans serveur SMTP, la messagerie de l'hébergement utilisée par la fonction <code>mail()</code> de PHP. Il reçoit l'adresse des destinataires et le contenu des messages : codes de double authentification et e-mails de test.</li>
+        </ul>
+
+        <h4 id="securite-en-tetes">En-têtes HTTP</h4>
+        <p>Toutes les réponses de <code>index.php</code> portent les en-têtes suivants ; le <code>.htaccess</code> les ajoute aux fichiers statiques (voir <a href="#nginx">Nginx</a> pour une configuration équivalente).</p>
+        <dl class="params">
+          <dt>Content-Security-Policy</dt>
+          <dd>Scripts, feuilles de style et polices de l'instance uniquement ; images de l'instance et des fonds de carte OpenStreetMap ; connexions vers l'instance et vers la recherche de lieux OpenStreetMap ; aucun objet intégré ; formulaires envoyés à l'instance seulement ; aucun affichage dans un cadre.</dd>
+          <dt>X-Content-Type-Options</dt>
+          <dd><code>nosniff</code></dd>
+          <dt>X-Frame-Options</dt>
+          <dd><code>DENY</code> : les pages de l'instance, site public compris, ne peuvent pas être affichées dans un cadre (<code>iframe</code>) d'un autre site.</dd>
+          <dt>Referrer-Policy</dt>
+          <dd><code>strict-origin-when-cross-origin</code></dd>
+          <dt>Permissions-Policy</dt>
+          <dd><code>camera=(), microphone=(), geolocation=(), payment=()</code></dd>
+          <dt>Cross-Origin-Opener-Policy</dt>
+          <dd><code>same-origin</code></dd>
+          <dt>Strict-Transport-Security</dt>
+          <dd><code>max-age=31536000</code>, en HTTPS seulement.</dd>
+        </dl>
+        <p>Valeur complète de la politique de sécurité du contenu :</p>
+<pre><code>default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob: https://tile.openstreetmap.org; font-src 'self'; connect-src 'self' https://nominatim.openstreetmap.org; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'</code></pre>
+
+        <h4>Site public</h4>
+        <ul>
+          <li>Les fonds de carte sont chargés depuis les serveurs d'OpenStreetMap, qui reçoivent l'adresse IP des visiteurs.</li>
+          <li>Seuls les points publiés des collections choisies sont affichés.</li>
+          <li>Quand les clés d'API sont exigées, l'activation du site public ouvre l'API aux requêtes qui annoncent le domaine de l'instance (voir <a href="#site-public-cles">Clés d'API et site public</a>).</li>
+        </ul>
+
+        <h4>Hébergement</h4>
+        <ul>
+          <li>Dossiers internes (<code>src/</code>, <code>data/</code>, <code>bin/</code>) et <code>config.php</code> inaccessibles depuis le web, à vérifier après l'installation (voir <a href="#apache">Apache</a>). Le back-office affiche une alerte aux comptes admin si <code>data/geocrowd.sqlite</code> se télécharge.</li>
+          <li>Fichiers et dossiers cachés (<code>.git</code>, <code>.env</code>…) inaccessibles depuis le web, sauf <code>.well-known/</code>.</li>
+          <li>Base et dossier de données déplaçables hors de la racine web (<code>database</code> et <code>data_dir</code>, voir <a href="#configuration">Configuration</a>), sur un hébergement qui le permet.</li>
+          <li>Erreurs internes écrites dans le journal PHP, jamais renvoyées au client.</li>
+          <li>Sauvegarde régulière et conjointe de <code>geocrowd.sqlite</code>, <code>secret.php</code> et <code>uploads/</code> (voir <a href="#mise-a-jour">Mise à jour et sauvegarde</a>).</li>
+        </ul>
+
+        <h4>Signaler une faille</h4>
+        <p>Les failles de sécurité se signalent en privé, par l'onglet <a href="https://github.com/geocrowd/geocrowd/security">Security</a> du dépôt <a href="https://github.com/geocrowd/geocrowd">github.com/geocrowd/geocrowd</a> (« Report a vulnerability »), et non dans un ticket public, avant la publication d'un correctif. La procédure est décrite dans le fichier <a href="https://github.com/geocrowd/geocrowd/blob/main/SECURITY.md">SECURITY.md</a> du dépôt.</p>
+      </section>
+
+      <!-- ============================================================ -->
+      <section>
+        <h2 id="licence">Licence</h2>
+        <p>geocrowd est un logiciel libre sous <a href="https://github.com/geocrowd/geocrowd/blob/main/LICENSE">licence MIT</a>. Il peut être utilisé, modifié et redistribué, y compris à des fins commerciales, à condition de conserver la mention de copyright et de licence.</p>
+        <p>Les données collectées ne relèvent pas de la licence du logiciel. Leur licence est choisie par l'instance qui les publie, sauf pour les points importés d'OpenStreetMap, sous <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>.</p>
+        <p>Code source, questions et contributions : <a href="https://github.com/geocrowd/geocrowd">github.com/geocrowd/geocrowd</a>.</p>
+      </section>
+    </main>
+  </div>
+
+  <footer class="border-t border-zinc-200 dark:border-zinc-800">
+    <div class="mx-auto flex max-w-6xl flex-wrap justify-between gap-x-6 gap-y-2 px-4 py-6 text-sm text-zinc-500 sm:px-6">
+      <span>geocrowd · <a class="hover:text-zinc-900 dark:hover:text-white" href="https://github.com/geocrowd/geocrowd/blob/main/LICENSE">licence MIT</a></span>
+      <span><a class="hover:text-zinc-900 dark:hover:text-white" href="./">Accueil</a> · <a class="hover:text-zinc-900 dark:hover:text-white" href="https://github.com/geocrowd/geocrowd">Code source</a> · <a class="hover:text-zinc-900 dark:hover:text-white" href="https://github.com/geocrowd/geocrowd/issues">Signaler un problème</a></span>
+    </div>
+  </footer>
+
+  <script src="site.js" defer></script>
+</body>
+</html>

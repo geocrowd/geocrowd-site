@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>geocrowd · Collecte et publication d'informations géolocalisées</title>
+  <meta name="description" content="geocrowd : logiciel libre de collecte et de publication d'informations géolocalisées. API publique GeoJSON, modération dans un back-office, site public facultatif. PHP 8.1 et SQLite, licence MIT.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:site_name" content="geocrowd">
+  <meta property="og:title" content="Collecte et publication d'informations géolocalisées">
+  <meta property="og:description" content="Logiciel libre : API publique GeoJSON, modération dans un back-office, site public facultatif. PHP 8.1 et SQLite, licence MIT.">
+  <meta property="og:url" content="https://geocrowd-api.org/">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-white text-zinc-700 antialiased dark:bg-zinc-950 dark:text-zinc-300">
+  <a class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:bg-zinc-900 focus:px-3 focus:py-2 focus:text-white" href="#contenu">Aller au contenu</a>
+
+  <header class="border-b border-zinc-200 dark:border-zinc-800">
+    <div class="mx-auto flex max-w-6xl flex-wrap items-center gap-x-8 gap-y-2 px-4 py-3.5 sm:px-6">
+      <a class="font-semibold text-zinc-900 dark:text-white" href="./">geocrowd</a>
+      <nav class="flex flex-wrap gap-x-6 gap-y-1 text-sm" aria-label="Navigation principale">
+        <a class="hover:text-zinc-900 dark:hover:text-white" href="documentation.html">Documentation</a>
+        <a class="hover:text-zinc-900 dark:hover:text-white" href="documentation.html#api">API</a>
+        <a class="hover:text-zinc-900 dark:hover:text-white" href="documentation.html#installation">Installation</a>
+      </nav>
+      <a class="ml-auto text-sm hover:text-zinc-900 dark:hover:text-white" href="https://github.com/geocrowd/geocrowd">GitHub</a>
+    </div>
+  </header>
+
+  <main id="contenu" class="mx-auto max-w-6xl px-4 sm:px-6">
+    <section class="grid grid-cols-1 gap-10 py-16 lg:grid-cols-2 lg:items-center lg:py-24">
+      <div>
+        <h1 class="text-4xl font-bold tracking-tight text-balance text-zinc-900 sm:text-5xl dark:text-white">Collecte et publication d'informations géolocalisées</h1>
+        <p class="mt-6 text-lg leading-8">geocrowd reçoit des points géolocalisés par une API publique, les soumet à une modération dans un back-office, puis les publie au format GeoJSON. Un site public facultatif affiche les points sur une carte et accepte des ajouts. Le logiciel fonctionne sur un hébergement PHP mutualisé, avec une base SQLite.</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a class="rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90" href="documentation.html#installation">Installation</a>
+          <a class="rounded-md px-4 py-2.5 text-sm font-semibold text-zinc-900 ring-1 ring-zinc-300 hover:bg-zinc-50 dark:text-white dark:ring-zinc-700 dark:hover:bg-zinc-900" href="documentation.html#api">Documentation de l'API</a>
+        </div>
+      </div>
+      <div class="code my-0 min-w-0">
+        <div class="code-title">GET /api/collections/bancs/points</div>
+<pre><code>$ curl https://votre-instance.org/api/collections/bancs/points
+
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": 128,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [4.8357, 45.764]
+      },
+      "properties": {
+        "etat": "Abîmé",
+        "places": 3,
+        "dossier": true
+      }
+    }
+  ]
+}</code></pre>
+      </div>
+    </section>
+
+    <section class="border-t border-zinc-200 py-16 dark:border-zinc-800" aria-labelledby="fonctionnalites">
+      <h2 id="fonctionnalites" class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">Fonctionnalités</h2>
+      <div class="mt-10 grid gap-x-12 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div>
+          <h3 class="font-semibold text-zinc-900 dark:text-white"><a class="hover:text-accent dark:hover:text-accent-dark" href="documentation.html#collections">Collections</a></h3>
+          <p class="mt-2">Chaque jeu de données est une collection, définie dans un éditeur de schéma : champs, listes de choix, images, liens entre points, description.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-zinc-900 dark:text-white"><a class="hover:text-accent dark:hover:text-accent-dark" href="documentation.html#api">API publique</a></h3>
+          <p class="mt-2">Lecture en GeoJSON avec filtres par emprise, par lien et par champ renseigné. Soumission de points en JSON ou avec des images.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-zinc-900 dark:text-white"><a class="hover:text-accent dark:hover:text-accent-dark" href="documentation.html#site-public">Site public</a></h3>
+          <p class="mt-2">Facultatif, servi à la racine de l'instance : carte des points publiés, fiche de chaque point, formulaires d'ajout et de proposition de modification générés à partir du schéma.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-zinc-900 dark:text-white"><a class="hover:text-accent dark:hover:text-accent-dark" href="documentation.html#moderation">Modération</a></h3>
+          <p class="mt-2">Les envois sont publiés après validation dans le back-office. La modération se règle par collection.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-zinc-900 dark:text-white"><a class="hover:text-accent dark:hover:text-accent-dark" href="documentation.html#ep-modifier">Propositions de modification</a></h3>
+          <p class="mt-2">Correction d'un point publié par le public, avec un commentaire. Le back-office affiche l'état actuel et l'état proposé de chaque champ.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-zinc-900 dark:text-white"><a class="hover:text-accent dark:hover:text-accent-dark" href="documentation.html#api-auth">Clés d'API</a></h3>
+          <p class="mt-2">Accès à l'API restreint par clé, en option. Une clé peut être limitée à des domaines.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-zinc-900 dark:text-white"><a class="hover:text-accent dark:hover:text-accent-dark" href="documentation.html#double-authentification">Double authentification</a></h3>
+          <p class="mt-2">Code à 6 chiffres après le mot de passe, par application d'authentification (TOTP) ou par e-mail. Facultative, ou imposée aux comptes admin ou à tous les membres.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-zinc-900 dark:text-white"><a class="hover:text-accent dark:hover:text-accent-dark" href="documentation.html#securite">Vie privée</a></h3>
+          <p class="mt-2">Images réencodées sans métadonnées. Adresses IP conservées uniquement sous forme hachée, pendant une heure. Aucun compte demandé au public.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-zinc-900 dark:text-white"><a class="hover:text-accent dark:hover:text-accent-dark" href="documentation.html#osm">Import OpenStreetMap</a></h3>
+          <p class="mt-2">Un script remplit une collection à partir d'une requête Overpass et la met à jour sans modifier le statut des points.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-zinc-900 dark:text-white"><a class="hover:text-accent dark:hover:text-accent-dark" href="documentation.html#prerequis">Hébergement</a></h3>
+          <p class="mt-2">PHP 8.1 et SQLite. Ni Composer, ni Node, ni tâche planifiée. Installation par copie des fichiers.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid grid-cols-1 gap-10 border-t border-zinc-200 py-16 lg:grid-cols-3 dark:border-zinc-800" aria-labelledby="fonctionnement">
+      <div>
+        <h2 id="fonctionnement" class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">Fonctionnement</h2>
+        <p class="mt-3">Exemple avec une collection de bancs publics.</p>
+      </div>
+      <ol class="space-y-8 lg:col-span-2">
+        <li class="flex gap-4">
+          <span class="flex size-7 flex-none items-center justify-center rounded-full bg-zinc-100 text-sm font-semibold text-zinc-900 dark:bg-zinc-800 dark:text-white">1</span>
+          <div class="min-w-0 flex-1">
+            <h3 class="font-semibold text-zinc-900 dark:text-white">Définition de la collection</h3>
+            <p class="mt-1">La collection et ses champs sont décrits dans l'éditeur de schéma du back-office. L'API renvoie cette définition.</p>
+            <div class="code mb-0">
+              <div class="code-title">définition de bancs</div>
+<pre><code>{ <span class="k">"id"</span>: <span class="s">"bancs"</span>, <span class="k">"name"</span>: <span class="s">"Bancs publics"</span>, <span class="k">"moderation"</span>: true,
+  <span class="k">"fields"</span>: [{ <span class="k">"name"</span>: <span class="s">"etat"</span>, <span class="k">"label"</span>: <span class="s">"État"</span>, <span class="k">"type"</span>: <span class="s">"select"</span>,
+               <span class="k">"options"</span>: [<span class="s">"Bon"</span>, <span class="s">"Abîmé"</span>, <span class="s">"Cassé"</span>] }] }</code></pre>
+            </div>
+          </div>
+        </li>
+        <li class="flex gap-4">
+          <span class="flex size-7 flex-none items-center justify-center rounded-full bg-zinc-100 text-sm font-semibold text-zinc-900 dark:bg-zinc-800 dark:text-white">2</span>
+          <div class="min-w-0 flex-1">
+            <h3 class="font-semibold text-zinc-900 dark:text-white">Envoi d'un point</h3>
+            <p class="mt-1">Un formulaire, une application ou un script envoie le point à l'API. Chaque champ est validé selon son type.</p>
+            <div class="code mb-0">
+              <div class="code-title">POST /api/collections/bancs/points</div>
+<pre><code>curl -X POST https://votre-instance.org/api/collections/bancs/points \
+  -H <span class="s">'Content-Type: application/json'</span> \
+  -d <span class="s">'{"lat": 45.764, "lng": 4.8357, "properties": {"etat": "Abîmé"}}'</span>
+<span class="c"># {"status":"pending"}</span></code></pre>
+            </div>
+          </div>
+        </li>
+        <li class="flex gap-4">
+          <span class="flex size-7 flex-none items-center justify-center rounded-full bg-zinc-100 text-sm font-semibold text-zinc-900 dark:bg-zinc-800 dark:text-white">3</span>
+          <div class="min-w-0 flex-1">
+            <h3 class="font-semibold text-zinc-900 dark:text-white">Modération</h3>
+            <p class="mt-1">Le point apparaît dans la page Modération du back-office, à sa position sur la carte. Il est validé, modifié, refusé ou supprimé.</p>
+          </div>
+        </li>
+        <li class="flex gap-4">
+          <span class="flex size-7 flex-none items-center justify-center rounded-full bg-zinc-100 text-sm font-semibold text-zinc-900 dark:bg-zinc-800 dark:text-white">4</span>
+          <div class="min-w-0 flex-1">
+            <h3 class="font-semibold text-zinc-900 dark:text-white">Publication</h3>
+            <p class="mt-1">Une fois validé, le point est renvoyé par <code>GET /api/collections/bancs/points</code> et affiché sur le site public s'il est activé.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="grid grid-cols-1 gap-10 border-t border-zinc-200 py-16 lg:grid-cols-3 dark:border-zinc-800" aria-labelledby="installation">
+      <div>
+        <h2 id="installation" class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">Installation</h2>
+        <p class="mt-3">Prérequis : PHP 8.1 ou supérieur, extensions <code>pdo_sqlite</code>, <code>gd</code> et <code>openssl</code>.</p>
+        <p class="mt-3"><a class="font-semibold text-accent hover:underline dark:text-accent-dark" href="documentation.html#installation">Guide d'installation →</a></p>
+      </div>
+      <ol class="list-decimal space-y-3 pl-5 marker:text-zinc-400 lg:col-span-2">
+        <li>Copie des fichiers sur l'hébergement (<a class="text-accent underline dark:text-accent-dark" href="https://github.com/geocrowd/geocrowd/archive/refs/heads/main.zip">archive du dépôt</a>).</li>
+        <li>Droits d'écriture sur <code>data/</code>.</li>
+        <li>Création du premier compte sur <code>/admin/</code>, puis activation recommandée de la double authentification.</li>
+        <li>Création d'une collection dans l'éditeur de schéma.</li>
+        <li>Activation du site public, en option, dans la page « Site public ».</li>
+      </ol>
+    </section>
+
+    <section class="grid grid-cols-1 gap-10 border-t border-zinc-200 py-16 lg:grid-cols-3 dark:border-zinc-800" aria-labelledby="code-source">
+      <h2 id="code-source" class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">Code source</h2>
+      <div class="lg:col-span-2">
+        <p>Le code source est publié sous licence MIT. Il est écrit en PHP et en JavaScript, sans dépendance à installer. Les questions et les contributions passent par les tickets du dépôt.</p>
+        <p class="mt-3 text-sm"><a class="text-accent underline dark:text-accent-dark" href="https://github.com/geocrowd/geocrowd">github.com/geocrowd/geocrowd</a> · <a class="text-accent underline dark:text-accent-dark" href="https://github.com/geocrowd/geocrowd/issues">tickets</a> · <a class="text-accent underline dark:text-accent-dark" href="https://github.com/geocrowd/geocrowd/blob/main/LICENSE">licence</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-zinc-200 dark:border-zinc-800">
+    <div class="mx-auto flex max-w-6xl flex-wrap justify-between gap-x-6 gap-y-2 px-4 py-6 text-sm text-zinc-500 sm:px-6">
+      <span>geocrowd · <a class="hover:text-zinc-900 dark:hover:text-white" href="https://github.com/geocrowd/geocrowd/blob/main/LICENSE">licence MIT</a></span>
+      <span><a class="hover:text-zinc-900 dark:hover:text-white" href="documentation.html">Documentation</a> · <a class="hover:text-zinc-900 dark:hover:text-white" href="https://github.com/geocrowd/geocrowd">Code source</a> · <a class="hover:text-zinc-900 dark:hover:text-white" href="https://github.com/geocrowd/geocrowd/issues">Signaler un problème</a></span>
+    </div>
+  </footer>
+
+  <script src="site.js" defer></script>
+</body>
+</html>
